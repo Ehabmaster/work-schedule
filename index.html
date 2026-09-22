@@ -132,6 +132,9 @@ main{padding:20px 0 60px;}
 .toast{position:fixed; bottom:18px; left:50%; transform:translateX(-50%) translateY(20px); opacity:0; background:var(--ink); color:var(--paper); padding:10px 20px; border-radius:999px; font-size:13px; font-weight:600; z-index:200; transition:all .2s ease;}
 .toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
 .sync-badge{font-size:10px; padding:2px 6px; border-radius:4px; background:#10b981; color:#fff; font-weight:bold;}
+
+.media-item-box { position: relative; display: inline-block; }
+.media-remove-btn { position: absolute; top: -6px; right: -6px; background: red; color: white; border: none; border-radius: 50%; width: 20px; height: 20px; font-size: 11px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
 </style>
 </head>
 <body>
@@ -365,7 +368,7 @@ dbRef.on('value', function(snapshot) {
 function saveStateToFirebase(callback) {
   dbRef.set(state, function(error) {
     if (error) {
-      showToast('خطأ في الاتصال بالخادم');
+      showToast('خطأ: فشل الحفظ! قد يكون حجم الصور كبيراً جداً.');
     } else {
       if (callback) callback();
     }
@@ -564,20 +567,20 @@ window.renderEmpSchedule = function() {
   var daysCount = parseInt(rangeType);
   document.getElementById('empScheduleBody').innerHTML = generateDepartmentTable(dept.id, startDateVal, daysCount, false);
 
-  var noteData = (state.deptNotes[startDateVal] && state.deptNotes[startDateVal][dept.id]) || { text: '', media: [] };
+  var noteData = (state.deptNotes && state.deptNotes[startDateVal] && state.deptNotes[startDateVal][dept.id]) || { text: '', media: [] };
   var displayBox = document.getElementById('empDeptNoteDisplay');
   
   if (noteData.text || (noteData.media && noteData.media.length > 0)) {
     var mediaHtml = (noteData.media || []).map(function(item) {
       return item.type === 'image'
-        ? '<img src="' + item.url + '" style="max-width:200px; max-height:150px; border-radius:8px; border:1px solid var(--line); margin:5px;">'
-        : '<video src="' + item.url + '" controls style="max-width:250px; max-height:150px; border-radius:8px; border:1px solid var(--line); margin:5px;"></video>';
+        ? '<img src="' + item.url + '" style="max-width:220px; max-height:160px; border-radius:8px; border:1px solid var(--line); margin:5px;">'
+        : '<video src="' + item.url + '" controls style="max-width:250px; max-height:160px; border-radius:8px; border:1px solid var(--line); margin:5px;"></video>';
     }).join('');
 
     displayBox.innerHTML = 
       '<div style="background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-m); padding:16px;">' +
-        '<h4 style="color:var(--rust); margin-bottom:8px;">📌 ملاحظات تعليمات الإدارة للقسم:</h4>' +
-        '<p style="margin:0 0 10px 0; font-size:14px;">' + (noteData.text || 'لا توجد ملاحظات نصية.') + '</p>' +
+        '<h4 style="color:var(--rust); margin-bottom:8px;">📌 ملاحظات وتوجيهات الإدارة للقسم:</h4>' +
+        '<p style="margin:0 0 10px 0; font-size:14px; white-space:pre-wrap;">' + (noteData.text || 'لا توجد ملاحظات نصية.') + '</p>' +
         '<div style="display:flex; gap:10px; flex-wrap:wrap;">' + mediaHtml + '</div>' +
       '</div>';
   } else {
@@ -607,41 +610,81 @@ window.renderAdmin = function() {
 
   document.getElementById('adminTabContent').innerHTML = generateDepartmentTable(activeDeptId, startDateVal, daysCount, true);
 
-  var noteData = (state.deptNotes[startDateVal] && state.deptNotes[startDateVal][activeDeptId]) || { text: '', media: [] };
+  var noteData = (state.deptNotes && state.deptNotes[startDateVal] && state.deptNotes[startDateVal][activeDeptId]) || { text: '', media: [] };
   document.getElementById('deptNoteText').value = noteData.text || '';
-  currentUploadedMedia = noteData.media || [];
+  currentUploadedMedia = noteData.media ? [...noteData.media] : [];
   renderMediaPreview('adminMediaPreview', currentUploadedMedia);
 };
 
 window.switchAdminTab = function(tab) { activeDeptId = tab; renderAdmin(); };
+
+function compressImage(file, callback) {
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var img = new Image();
+    img.onload = function() {
+      var canvas = document.createElement('canvas');
+      var max_size = 800; // تصغير الحجم للحفظ السريع
+      var width = img.width;
+      var height = img.height;
+      if (width > height) {
+        if (width > max_size) {
+          height *= max_size / width;
+          width = max_size;
+        }
+      } else {
+        if (height > max_size) {
+          width *= max_size / height;
+          height = max_size;
+        }
+      }
+      canvas.width = width;
+      canvas.height = height;
+      var ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, width, height);
+      callback(canvas.toDataURL('image/jpeg', 0.6));
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
 
 window.handleMediaUpload = function(event) {
   var files = event.target.files;
   if (!files || !files.length) return;
 
   Array.from(files).forEach(function(file) {
-    var reader = new FileReader();
-    reader.onload = function(e) {
-      currentUploadedMedia.push({
-        type: file.type.startsWith('image/') ? 'image' : 'video',
-        url: e.target.result
+    if (file.type.startsWith('image/')) {
+      compressImage(file, function(compressedUrl) {
+        currentUploadedMedia.push({ type: 'image', url: compressedUrl });
+        renderMediaPreview('adminMediaPreview', currentUploadedMedia);
       });
-      renderMediaPreview('adminMediaPreview', currentUploadedMedia);
-    };
-    reader.readAsDataURL(file);
+    } else {
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        currentUploadedMedia.push({ type: 'video', url: e.target.result });
+        renderMediaPreview('adminMediaPreview', currentUploadedMedia);
+      };
+      reader.readAsDataURL(file);
+    }
   });
+};
+
+window.removeMediaItem = function(index) {
+  currentUploadedMedia.splice(index, 1);
+  renderMediaPreview('adminMediaPreview', currentUploadedMedia);
 };
 
 function renderMediaPreview(containerId, mediaArray) {
   var container = document.getElementById(containerId);
   if (!container) return;
   
-  container.innerHTML = mediaArray.map(function(item) {
+  container.innerHTML = mediaArray.map(function(item, idx) {
     var elem = item.type === 'image' 
-      ? '<img src="' + item.url + '" style="width:100px; height:100px; object-fit:cover; border-radius:6px; border:1px solid var(--line);">'
-      : '<video src="' + item.url + '" controls style="width:140px; height:100px; border-radius:6px; border:1px solid var(--line);"></video>';
+      ? '<img src="' + item.url + '" style="width:90px; height:90px; object-fit:cover; border-radius:6px; border:1px solid var(--line);">'
+      : '<video src="' + item.url + '" style="width:120px; height:90px; border-radius:6px; border:1px solid var(--line);"></video>';
     
-    return '<div style="position:relative; display:inline-block;">' + elem + '</div>';
+    return '<div class="media-item-box">' + elem + '<button class="media-remove-btn" onclick="removeMediaItem(' + idx + ')">×</button></div>';
   }).join('');
 }
 
@@ -658,7 +701,7 @@ window.saveDeptNote = function() {
   };
 
   saveStateToFirebase(function(){
-    showToast('تم حفظ الملاحظة سحابياً');
+    showToast('تم حفظ الملاحظة والميديا سحابياً بنجاح 📌');
     renderAdmin();
   });
 };
@@ -716,7 +759,7 @@ window.openAssignModal = function(deptId, empId, dateKey, isThu) {
     '</div>' +
 
     '<div class="field">' +
-      '<label>ملاحظة الإدارة للقسم والجميع:</label>' +
+      '<label>ملاحظة الموظف الفردية:</label>' +
       '<input type="text" id="noteInput" value="' + currentNote + '" placeholder="مثال: دوام جزئي، تأخير...">' +
     '</div>' +
 
