@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>جدول دوام الموظفين - المطعم ينابيع الشام </title>
+<title>جدول دوام الموظفين - yanabie1994</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@500;700;800;900&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -144,7 +144,7 @@ main{padding:20px 0 60px;}
       <div class="brand-mark">🍽️</div>
       <div class="brand-text">
         <h1>جدول دوام الموظفين <span id="syncStatus" class="sync-badge">جاري الاتصال...</span></h1>
-        <span>مطعم العائلة - نظام الإدارة المباشر</span>
+        <span>yanabie1994 - نظام الإدارة المباشر</span>
       </div>
     </div>
     <div class="nav-right">
@@ -340,7 +340,6 @@ function getDefaultEmployees() {
   return emps;
 }
 
-// مزامنة حية وسريعة جداً مع السحابة
 dbRef.on('value', function(snapshot) {
   var data = snapshot.val();
   if (data) {
@@ -419,7 +418,7 @@ function getEmployeeStatusOnDate(empId, deptId, dateKey, isThursday) {
 
   if (empId in offs) {
     var subId = offs[empId];
-    var subEmp = subId ? emps.find(function(e){ return e.id === subId; }) : null;
+    var subEmp = (subId && subId !== 'NONE') ? emps.find(function(e){ return e.id === subId; }) : null;
     return { isOff: true, text: 'إجازة', subName: subEmp ? subEmp.name : null, note: adminNote };
   }
 
@@ -727,7 +726,7 @@ window.openAssignModal = function(deptId, empId, dateKey, isThu) {
       '<label>اختيار التبديل والإجازة:</label>' +
       '<select id="subSelectInput">' +
         '<option value="">-- على راس عمله / كالمعتاد --</option>' +
-        '<option value="OFF_NO_SUB" ' + (empId in offs && !currentSubId ? 'selected' : '') + '>إجازة (بدون بديل)</option>' +
+        '<option value="OFF_NO_SUB" ' + (empId in offs && (currentSubId==='NONE' || !currentSubId) ? 'selected' : '') + '>إجازة (بدون بديل)</option>' +
         emps.filter(function(e){ return e.id !== empId; }).map(function(s){
           var sShift = getEmployeeShiftText(s.id, deptId, dateKey, isThu);
           return '<option value="' + s.id + '" ' + (s.id === currentSubId ? 'selected' : '') + '>إجازة (البديل: ' + s.name + ' - دوامه أصلاً: ' + sShift.text + ')</option>';
@@ -780,7 +779,7 @@ window.handleSaveCellChanges = function(deptId, empId, dateKey) {
   if (subValue === "") {
     delete state.schedule[dateKey][deptId].offs[empId];
   } else if (subValue === "OFF_NO_SUB") {
-    state.schedule[dateKey][deptId].offs[empId] = null;
+    state.schedule[dateKey][deptId].offs[empId] = "NONE";
   } else {
     state.schedule[dateKey][deptId].offs[empId] = subValue;
   }
