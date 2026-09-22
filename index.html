@@ -3,7 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
-<title>نظام إدارة موظفي المطعم - جدول متكامل</title>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>جدول دوام الموظفين - المطعم ينابيع الشام </title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@500;700;800;900&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -71,12 +74,12 @@ button{cursor:pointer;}
 .nav-right{display:flex; align-items:center; gap:10px;}
 .date-pill{font-size:12px; color:var(--ink-soft); background:var(--surface-raised); border:1px solid var(--line); border-radius:999px; padding:4px 12px;}
 
-.btn{border:1px solid var(--line-strong); background:var(--surface-raised); color:var(--ink); border-radius:var(--radius-s); padding:7px 14px; font-size:13px; font-weight:600;}
+.btn{border:1px solid var(--line-strong); background:var(--surface-raised); color:var(--ink); border-radius:var(--radius-s); padding:7px 14px; font-size:13px; font-weight:600; transition: background .15s;}
 .btn-rust{background:var(--rust); border-color:var(--rust-ink); color:#fff;}
+.btn-rust:hover{background:var(--rust-ink);}
 .btn-ghost{background:transparent; border-color:transparent;}
 .btn-sm{padding:4px 10px; font-size:12px;}
 .btn-danger{color: var(--peak-red); padding:2px 6px; border-radius:4px; font-size:11px;}
-.btn-danger:hover{background:var(--peak-bg);}
 
 main{padding:20px 0 60px;}
 .view{display:none;}
@@ -140,8 +143,8 @@ main{padding:20px 0 60px;}
     <div class="brand" onclick="navigateTo('landing')">
       <div class="brand-mark">🍽️</div>
       <div class="brand-text">
-        <h1>إدارة دوام المطعم <span id="syncStatus" class="sync-badge">جاري الاتصال...</span></h1>
-        <span>جدول العمل الأسبوعي / 20 يوماً</span>
+        <h1>جدول دوام الموظفين <span id="syncStatus" class="sync-badge">جاري الاتصال...</span></h1>
+        <span>مطعم العائلة - نظام الإدارة المباشر</span>
       </div>
     </div>
     <div class="nav-right">
@@ -186,10 +189,13 @@ main{padding:20px 0 60px;}
 
   <!-- ADMIN VIEW -->
   <section class="view" id="view-admin">
-    <div style="margin-bottom:12px;"><button class="btn btn-ghost btn-sm" onclick="navigateTo('landing')">→ الرئيسية</button></div>
+    <div style="margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;">
+      <button class="btn btn-ghost btn-sm" onclick="navigateTo('landing')">→ الرئيسية</button>
+      <button class="btn btn-rust" onclick="manualSaveAll()" style="box-shadow: 0 2px 8px rgba(0,0,0,0.15);">💾 حفظ شامل للتغييرات الآن</button>
+    </div>
     <div style="margin-bottom:12px;">
       <h2>لوحة التحكم الشاملة - الإدارة</h2>
-      <span style="font-size:13px; color:var(--ink-soft);">اضغط على أي خلية لتعديل الدوام، الملاحظات، أو البديل.</span>
+      <span style="font-size:13px; color:var(--ink-soft);">اضغط على أي خلية لتعديل الدوام، ثم اضغط حفظ التغيرات.</span>
     </div>
     <div class="tab-bar" id="adminTabBar"></div>
     <div class="controls-bar">
@@ -309,9 +315,7 @@ function parseInputDate(str) {
     var y = parseInt(parts[0], 10);
     var m = parseInt(parts[1], 10) - 1;
     var d = parseInt(parts[2], 10);
-    if (!isNaN(y) && !isNaN(m) && !isNaN(d)) {
-      return new Date(y, m, d);
-    }
+    if (!isNaN(y) && !isNaN(m) && !isNaN(d)) return new Date(y, m, d);
   }
   return new Date();
 }
@@ -336,6 +340,7 @@ function getDefaultEmployees() {
   return emps;
 }
 
+// مزامنة حية وسريعة جداً مع السحابة
 dbRef.on('value', function(snapshot) {
   var data = snapshot.val();
   if (data) {
@@ -358,13 +363,21 @@ dbRef.on('value', function(snapshot) {
   refreshCurrentView();
 });
 
-function saveStateToFirebase() {
+function saveStateToFirebase(callback) {
   dbRef.set(state, function(error) {
     if (error) {
-      showToast('خطأ في الاتصال بالحافظة السحابية');
+      showToast('خطأ في الاتصال بالخادم');
+    } else {
+      if (callback) callback();
     }
   });
 }
+
+window.manualSaveAll = function() {
+  saveStateToFirebase(function() {
+    showToast('تم حفظ كافة التغيرات سحابياً بنجاح! 🚀');
+  });
+};
 
 function refreshCurrentView() {
   var activeView = document.querySelector('.view.active');
@@ -497,7 +510,7 @@ function generateDepartmentTable(deptId, startDateVal, daysCount, isEditable) {
   emps.forEach(function(emp){
     html += '<tr><td style="font-weight:700; position:sticky; right:0; background:var(--surface-raised); z-index:2; text-align:right;">' + 
       emp.name + 
-      (isEditable ? ' <button class="btn-ghost btn-danger" onclick="handleRemoveEmployee(\''+deptId+'\', \''+emp.id+'\')" title="حذف الموظف">🗑️</button>' : '') +
+      (isEditable ? ' <button class="btn-ghost btn-danger" onclick="handleRemoveEmployee(\''+deptId+'\', \''+emp.id+'\')" title="حذف">🗑️</button>' : '') +
       '</td>';
       
     dates.forEach(function(d){
@@ -513,7 +526,6 @@ function generateDepartmentTable(deptId, startDateVal, daysCount, isEditable) {
       else if(status.isSub) {
         cellContent = '<span class="cell-sub">بديل (' + status.text + ')</span>';
         cellContent += '<br><small style="font-size:10px; color:var(--ink-soft);">عن: ' + status.subFor + '</small>';
-        cellContent += '<br><small style="font-size:9.5px; color:var(--purple); font-weight:600;">(دوامه الأصلي: ' + status.ownShiftText + ')</small>';
       }
       else {
         var cls = status.isCustom ? 'cell-custom' : 'cell-shift';
@@ -521,7 +533,7 @@ function generateDepartmentTable(deptId, startDateVal, daysCount, isEditable) {
       }
 
       if (status.note) {
-        cellContent += '<span class="cell-note">ملاحظة الإدارة: ' + status.note + '</span>';
+        cellContent += '<span class="cell-note">ملاحظة: ' + status.note + '</span>';
       }
 
       if (isEditable) {
@@ -646,9 +658,10 @@ window.saveDeptNote = function() {
     media: [...currentUploadedMedia]
   };
 
-  saveStateToFirebase();
-  showToast('تم حفظ ملاحظة الوسائط سحابياً');
-  renderAdmin();
+  saveStateToFirebase(function(){
+    showToast('تم حفظ الملاحظة سحابياً');
+    renderAdmin();
+  });
 };
 
 window.handleAddEmployee = function() {
@@ -657,9 +670,10 @@ window.handleAddEmployee = function() {
     var newId = activeDeptId + '_' + Date.now();
     if(!state.employees[activeDeptId]) state.employees[activeDeptId] = [];
     state.employees[activeDeptId].push({id: newId, name: name.trim(), defaultShiftIndex: 4});
-    saveStateToFirebase();
-    renderAdmin();
-    showToast('تمت إضافة الموظف بنجاح');
+    saveStateToFirebase(function(){
+      renderAdmin();
+      showToast('تمت إضافة الموظف بنجاح');
+    });
   }
 };
 
@@ -667,9 +681,10 @@ window.handleRemoveEmployee = function(deptId, empId) {
   event.stopPropagation();
   if(confirm("هل أنت متأكد من إزالة هذا الموظف من القسم؟")) {
     state.employees[deptId] = state.employees[deptId].filter(function(e) { return e.id !== empId; });
-    saveStateToFirebase();
-    renderAdmin();
-    showToast('تم إزالة الموظف بنجاح');
+    saveStateToFirebase(function(){
+      renderAdmin();
+      showToast('تم إزالة الموظف بنجاح');
+    });
   }
 };
 
@@ -703,13 +718,13 @@ window.openAssignModal = function(deptId, empId, dateKey, isThu) {
 
     '<div class="field">' +
       '<label>ملاحظة الإدارة للقسم والجميع:</label>' +
-      '<input type="text" id="noteInput" value="' + currentNote + '" placeholder="مثال: دوام جزئي، تأخير، تغطية قسم آخر...">' +
+      '<input type="text" id="noteInput" value="' + currentNote + '" placeholder="مثال: دوام جزئي، تأخير...">' +
     '</div>' +
 
     '<hr style="border:0; border-top:1px dashed var(--line); margin:14px 0;">' +
 
     '<div class="field">' +
-      '<label>اختيار التبديل والإجازة (خاص للإدارة):</label>' +
+      '<label>اختيار التبديل والإجازة:</label>' +
       '<select id="subSelectInput">' +
         '<option value="">-- على راس عمله / كالمعتاد --</option>' +
         '<option value="OFF_NO_SUB" ' + (empId in offs && !currentSubId ? 'selected' : '') + '>إجازة (بدون بديل)</option>' +
@@ -722,7 +737,7 @@ window.openAssignModal = function(deptId, empId, dateKey, isThu) {
 
     '<div class="modal-actions">' +
       '<button class="btn btn-ghost" onclick="closeAssignModal()">إلغاء</button>' +
-      '<button class="btn btn-rust" onclick="handleSaveCellChanges(\'' + deptId + '\', \'' + empId + '\', \'' + dateKey + '\')">حفظ والتحديث</button>' +
+      '<button class="btn btn-rust" onclick="handleSaveCellChanges(\'' + deptId + '\', \'' + empId + '\', \'' + dateKey + '\')">تطبيق التعديل</button>' +
     '</div>';
 
   document.getElementById('modal-assign').hidden = false;
@@ -770,10 +785,11 @@ window.handleSaveCellChanges = function(deptId, empId, dateKey) {
     state.schedule[dateKey][deptId].offs[empId] = subValue;
   }
 
-  saveStateToFirebase();
   closeAssignModal();
   renderAdmin();
-  showToast('تم حفظ التعديلات لليوم المحدد بنجاح');
+  saveStateToFirebase(function(){
+    showToast('تم الحفظ سحابياً بنجاح');
+  });
 };
 
 window.closeLoginModal = function() { document.getElementById('modal-login').hidden = true; setMode('employee'); };
