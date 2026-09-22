@@ -128,6 +128,7 @@ main{padding:20px 0 60px;}
 
 .toast{position:fixed; bottom:18px; left:50%; transform:translateX(-50%) translateY(20px); opacity:0; background:var(--ink); color:var(--paper); padding:10px 20px; border-radius:999px; font-size:13px; font-weight:600; z-index:200; transition:all .2s ease;}
 .toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+.sync-badge{font-size:10px; padding:2px 6px; border-radius:4px; background:#10b981; color:#fff; font-weight:bold;}
 </style>
 </head>
 <body>
@@ -139,7 +140,7 @@ main{padding:20px 0 60px;}
     <div class="brand" onclick="navigateTo('landing')">
       <div class="brand-mark">🍽️</div>
       <div class="brand-text">
-        <h1>إدارة دوام المطعم</h1>
+        <h1>إدارة دوام المطعم <span id="syncStatus" class="sync-badge">جاري الاتصال...</span></h1>
         <span>جدول العمل الأسبوعي / 20 يوماً</span>
       </div>
     </div>
@@ -180,7 +181,6 @@ main{padding:20px 0 60px;}
       </div>
     </div>
     <div id="empScheduleBody"></div>
-    <!-- عرض ملاحظات القسم والميديا في الأسفل خارج الجدول -->
     <div id="empDeptNoteDisplay" style="margin-top:20px;"></div>
   </section>
 
@@ -208,7 +208,6 @@ main{padding:20px 0 60px;}
     </div>
     <div id="adminTabContent"></div>
 
-    <!-- صندوق إضافة ملاحظات وميديا القسم للإدارة -->
     <div class="dept-note-card" style="margin-top:20px; padding:16px; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-m);">
       <h3 style="margin-bottom:10px;">📝 ملاحظة وتنبيهات الإدارة للقسم</h3>
       <div class="field">
@@ -245,9 +244,29 @@ main{padding:20px 0 60px;}
   <div class="modal" id="modal-assign-body"></div>
 </div>
 
+<!-- FIREBASE SDKs -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
 <script>
 (function(){
 "use strict";
+
+// Firebase Configuration
+var firebaseConfig = {
+  apiKey: "AIzaSyC7Sbz153aPhf4msvjUQ5dQ7d4ex_97I8",
+  authDomain: "ebgxd-2b574.firebaseapp.com",
+  projectId: "ebgxd-2b574",
+  storageBucket: "ebgxd-2b574.firebasestorage.app",
+  messagingSenderId: "1008814229045",
+  appId: "1:1008814229045:web:f1c4d515dbcd794f9b137c",
+  measurementId: "G-CMLT5X7LV5"
+};
+
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+var db = firebase.database();
+var dbRef = db.ref('restaurant_schedule');
 
 var DEPARTMENTS = [
   {id:'shawarma', name:'الشاورما', icon:'🌯', color:'#b5451e'},
@@ -289,20 +308,54 @@ function getFirstDayOfCurrentMonth() {
   return new Date(now.getFullYear(), now.getMonth(), 1);
 }
 
-function initData() {
+function getDefaultEmployees() {
+  var emps = {};
   DEPARTMENTS.forEach(function(d) {
-    state.employees[d.id] = EMPLOYEE_NAMES[d.id].map(function(name, i) {
+    emps[d.id] = EMPLOYEE_NAMES[d.id].map(function(name, i) {
       var shiftIdx = 4;
       if (i === 0) shiftIdx = 0;
       else if (i === 1) shiftIdx = 1;
       else if (i === 2) shiftIdx = 2;
       else if (i === 3) shiftIdx = 3;
-      return { id: d.id + '_' + Date.now() + '_' + i, name: name, defaultShiftIndex: shiftIdx };
+      return { id: d.id + '_' + i, name: name, defaultShiftIndex: shiftIdx };
     });
   });
-  var today = formatDateKey(new Date());
-  document.getElementById('adminStartDate').value = today;
-  document.getElementById('empStartDate').value = today;
+  return emps;
+}
+
+// Sync with Firebase Realtime Database
+dbRef.on('value', function(snapshot) {
+  var data = snapshot.val();
+  if (data) {
+    state.employees = data.employees || getDefaultEmployees();
+    state.customShifts = data.customShifts || {};
+    state.schedule = data.schedule || {};
+    state.notes = data.notes || {};
+    state.deptNotes = data.deptNotes || {};
+  } else {
+    state.employees = getDefaultEmployees();
+    saveStateToFirebase();
+  }
+  
+  document.getElementById('syncStatus').innerText = 'متصل ومزامن 🟢';
+  refreshCurrentView();
+});
+
+function saveStateToFirebase() {
+  dbRef.set(state, function(error) {
+    if (error) {
+      showToast('خطأ في الاتصال بالحافظة السحابية');
+    }
+  });
+}
+
+function refreshCurrentView() {
+  var activeView = document.querySelector('.view.active');
+  if (activeView) {
+    if (activeView.id === 'view-landing') renderLanding();
+    else if (activeView.id === 'view-emp-schedule') renderEmpSchedule();
+    else if (activeView.id === 'view-admin') renderAdmin();
+  }
 }
 
 function getOffsReadOnly(dateKey, deptId) {
@@ -316,7 +369,7 @@ function getEmployeeShiftText(empId, deptId, dateKey, isThursday) {
     return { text: BASE_SHIFTS[val].time, isCustom: false };
   }
 
-  var emps = state.employees[deptId];
+  var emps = state.employees[deptId] || [];
   var emp = emps.find(function(e){ return e.id === empId; });
 
   if (isThursday && emp && emp.defaultShiftIndex === 4) {
@@ -331,7 +384,7 @@ function getEmployeeShiftText(empId, deptId, dateKey, isThursday) {
 
 function getEmployeeStatusOnDate(empId, deptId, dateKey, isThursday) {
   var offs = getOffsReadOnly(dateKey, deptId);
-  var emps = state.employees[deptId];
+  var emps = state.employees[deptId] || [];
   var adminNote = (state.notes[dateKey] && state.notes[dateKey][empId]) || '';
 
   if (empId in offs) {
@@ -405,7 +458,7 @@ window.openDepartment = function(deptId) {
 
 function generateDepartmentTable(deptId, startDateVal, daysCount, isEditable) {
   var dept = DEPARTMENTS.find(function(d){ return d.id === deptId; });
-  var emps = state.employees[deptId];
+  var emps = state.employees[deptId] || [];
 
   emps.sort(function(a, b) { return a.defaultShiftIndex - b.defaultShiftIndex; });
 
@@ -484,7 +537,6 @@ window.renderEmpSchedule = function() {
   var daysCount = parseInt(rangeType);
   document.getElementById('empScheduleBody').innerHTML = generateDepartmentTable(dept.id, startDateVal, daysCount, false);
 
-  // إظهار ملاحظات القسم والوسائط أسفل الجدول
   var noteData = (state.deptNotes[startDateVal] && state.deptNotes[startDateVal][dept.id]) || { text: '', media: [] };
   var displayBox = document.getElementById('empDeptNoteDisplay');
   
@@ -528,7 +580,6 @@ window.renderAdmin = function() {
 
   document.getElementById('adminTabContent').innerHTML = generateDepartmentTable(activeDeptId, startDateVal, daysCount, true);
 
-  // تحديث مدخلات الملاحظة الحالية للقسم في الإدارة
   var noteData = (state.deptNotes[startDateVal] && state.deptNotes[startDateVal][activeDeptId]) || { text: '', media: [] };
   document.getElementById('deptNoteText').value = noteData.text || '';
   currentUploadedMedia = noteData.media || [];
@@ -578,7 +629,8 @@ window.saveDeptNote = function() {
     media: [...currentUploadedMedia]
   };
 
-  showToast('تم حفظ ملاحظة وسائط القسم بنجاح');
+  saveStateToFirebase();
+  showToast('تم حفظ ملاحظة الوسائط سحابياً');
   renderAdmin();
 };
 
@@ -586,7 +638,9 @@ window.handleAddEmployee = function() {
   var name = prompt("أدخل اسم الموظف الجديد:");
   if(name && name.trim()) {
     var newId = activeDeptId + '_' + Date.now();
+    if(!state.employees[activeDeptId]) state.employees[activeDeptId] = [];
     state.employees[activeDeptId].push({id: newId, name: name.trim(), defaultShiftIndex: 4});
+    saveStateToFirebase();
     renderAdmin();
     showToast('تمت إضافة الموظف بنجاح');
   }
@@ -596,13 +650,14 @@ window.handleRemoveEmployee = function(deptId, empId) {
   event.stopPropagation();
   if(confirm("هل أنت متأكد من إزالة هذا الموظف من القسم؟")) {
     state.employees[deptId] = state.employees[deptId].filter(function(e) { return e.id !== empId; });
+    saveStateToFirebase();
     renderAdmin();
     showToast('تم إزالة الموظف بنجاح');
   }
 };
 
 window.openAssignModal = function(deptId, empId, dateKey, isThu) {
-  var emps = state.employees[deptId];
+  var emps = state.employees[deptId] || [];
   var emp = emps.find(function(e) { return e.id === empId; });
   var offs = getOffsReadOnly(dateKey, deptId);
   var currentSubId = offs[empId] || '';
@@ -694,9 +749,10 @@ window.handleSaveCellChanges = function(deptId, empId, dateKey) {
     state.schedule[dateKey][deptId].offs[empId] = subValue;
   }
 
+  saveStateToFirebase();
   closeAssignModal();
   renderAdmin();
-  showToast('تم حفظ التعديلات بنجاح');
+  showToast('تم حفظ التعديلات سحابياً بنجاح');
 };
 
 window.closeLoginModal = function() { document.getElementById('modal-login').hidden = true; setMode('employee'); };
@@ -724,7 +780,6 @@ function showToast(msg) {
   setTimeout(function(){ t.className = 'toast'; }, 2200);
 }
 
-initData();
 document.getElementById('todayPill').innerText = new Date().toLocaleDateString('ar-EG');
 renderLanding();
 
