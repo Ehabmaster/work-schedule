@@ -265,7 +265,7 @@ main{padding:20px 0 60px;}
     <h3>🔒 دخول لوحة الإدارة</h3>
     <div class="field">
       <label>كلمة المرور</label>
-      <input type="password" id="loginPassword" placeholder="أدخل كلمة المرور (admin123)">
+      <input type="password" id="loginPassword" placeholder="أدخل كلمة المرور (...)">
     </div>
     <div class="modal-actions">
       <button class="btn btn-ghost" onclick="closeLoginModal()">إلغاء</button>
@@ -918,7 +918,7 @@ window.handleSaveCellChanges = function(deptId, empId, dateKey) {
 
 window.closeLoginModal = function() { document.getElementById('modal-login').hidden = true; setMode('employee'); };
 window.submitLogin = function() {
-  if(document.getElementById('loginPassword').value === 'admin123') {
+  if(document.getElementById('loginPassword').value === '1944y1994') {
     isAdmin = true;
     document.getElementById('modal-login').hidden = true;
     document.getElementById('adminLogoutBtn').hidden = false;
