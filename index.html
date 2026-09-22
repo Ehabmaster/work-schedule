@@ -252,7 +252,6 @@ main{padding:20px 0 60px;}
 (function(){
 "use strict";
 
-// Firebase Configuration
 var firebaseConfig = {
   apiKey: "AIzaSyC7Sbz153aPhf4msvjUQ5dQ7d4ex_97I8",
   authDomain: "ebgxd-2b574.firebaseapp.com",
@@ -263,7 +262,6 @@ var firebaseConfig = {
   measurementId: "G-CMLT5X7LV5"
 };
 
-// Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 var db = firebase.database();
 var dbRef = db.ref('restaurant_schedule');
@@ -297,10 +295,25 @@ var isAdmin = false;
 var activeDeptId = null;
 
 function formatDateKey(d) {
+  if (isNaN(d.getTime())) d = new Date();
   var year = d.getFullYear();
   var month = String(d.getMonth() + 1).padStart(2, '0');
   var day = String(d.getDate()).padStart(2, '0');
   return year + '-' + month + '-' + day;
+}
+
+function parseInputDate(str) {
+  if (!str) return new Date();
+  var parts = str.split('-');
+  if (parts.length === 3) {
+    var y = parseInt(parts[0], 10);
+    var m = parseInt(parts[1], 10) - 1;
+    var d = parseInt(parts[2], 10);
+    if (!isNaN(y) && !isNaN(m) && !isNaN(d)) {
+      return new Date(y, m, d);
+    }
+  }
+  return new Date();
 }
 
 function getFirstDayOfCurrentMonth() {
@@ -323,7 +336,6 @@ function getDefaultEmployees() {
   return emps;
 }
 
-// Sync with Firebase Realtime Database
 dbRef.on('value', function(snapshot) {
   var data = snapshot.val();
   if (data) {
@@ -338,6 +350,11 @@ dbRef.on('value', function(snapshot) {
   }
   
   document.getElementById('syncStatus').innerText = 'متصل ومزامن 🟢';
+  
+  var today = formatDateKey(new Date());
+  if(!document.getElementById('empStartDate').value) document.getElementById('empStartDate').value = today;
+  if(!document.getElementById('adminStartDate').value) document.getElementById('adminStartDate').value = today;
+
   refreshCurrentView();
 });
 
@@ -411,7 +428,7 @@ function getEmployeeStatusOnDate(empId, deptId, dateKey, isThursday) {
 function generateDateList(startDateObj, daysCount) {
   var list = [];
   for(var i = 0; i < daysCount; i++) {
-    var d = new Date(startDateObj);
+    var d = new Date(startDateObj.getTime());
     d.setDate(startDateObj.getDate() + i);
     list.push(d);
   }
@@ -462,8 +479,7 @@ function generateDepartmentTable(deptId, startDateVal, daysCount, isEditable) {
 
   emps.sort(function(a, b) { return a.defaultShiftIndex - b.defaultShiftIndex; });
 
-  var parts = startDateVal.split('-');
-  var startDateObj = new Date(parseInt(parts[0]), parseInt(parts[1])-1, parseInt(parts[2]));
+  var startDateObj = parseInputDate(startDateVal);
   var dates = generateDateList(startDateObj, daysCount);
   var daysArabic = ['أحد', 'إثنين', 'ثلاثاء', 'أربعاء', 'خميس', 'جمعة', 'سبت'];
 
@@ -622,6 +638,7 @@ window.saveDeptNote = function() {
   var text = document.getElementById('deptNoteText').value.trim();
   var dateKey = document.getElementById('adminStartDate').value;
   
+  if (!state.deptNotes) state.deptNotes = {};
   if (!state.deptNotes[dateKey]) state.deptNotes[dateKey] = {};
   
   state.deptNotes[dateKey][activeDeptId] = {
@@ -723,7 +740,9 @@ window.handleSaveCellChanges = function(deptId, empId, dateKey) {
   var subValue = document.getElementById('subSelectInput').value;
   var noteValue = document.getElementById('noteInput').value.trim();
 
+  if (!state.customShifts) state.customShifts = {};
   if (!state.customShifts[dateKey]) state.customShifts[dateKey] = {};
+  
   if (shiftVal === 'CUSTOM') {
     var customText = document.getElementById('customTimeInput').value.trim();
     state.customShifts[dateKey][empId] = customText || '06:00 ص - 04:00 م';
@@ -731,6 +750,7 @@ window.handleSaveCellChanges = function(deptId, empId, dateKey) {
     state.customShifts[dateKey][empId] = parseInt(shiftVal);
   }
 
+  if (!state.notes) state.notes = {};
   if (!state.notes[dateKey]) state.notes[dateKey] = {};
   if (noteValue !== "") {
     state.notes[dateKey][empId] = noteValue;
@@ -738,6 +758,7 @@ window.handleSaveCellChanges = function(deptId, empId, dateKey) {
     delete state.notes[dateKey][empId];
   }
 
+  if (!state.schedule) state.schedule = {};
   if (!state.schedule[dateKey]) state.schedule[dateKey] = {};
   if (!state.schedule[dateKey][deptId]) state.schedule[dateKey][deptId] = {offs:{}};
   
@@ -752,7 +773,7 @@ window.handleSaveCellChanges = function(deptId, empId, dateKey) {
   saveStateToFirebase();
   closeAssignModal();
   renderAdmin();
-  showToast('تم حفظ التعديلات سحابياً بنجاح');
+  showToast('تم حفظ التعديلات لليوم المحدد بنجاح');
 };
 
 window.closeLoginModal = function() { document.getElementById('modal-login').hidden = true; setMode('employee'); };
