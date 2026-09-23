@@ -987,11 +987,16 @@ window.submitLogin = function() {
         document.getElementById('modal-login').hidden = true;
         document.getElementById('adminLogoutBtn').hidden = false;
         
-        // تفريغ القسم المحدد لكي تظهر الأقسام الأربعة أولاً بدلاً من فتح جدول الشاورما مباشرة
+        // تفريغ القسم المحدد لكي تظهر الأقسام الأربعة أولاً
         activeDeptId = null; 
-        navigateTo('landing'); 
         
-    } else { showToast('كلمة المرور غير صحيحة'); }
+        // إظهار واجهة الأقسام الرئيسية مباشرة دون الخروج من وضع الإدارة
+        renderLanding(); 
+        
+        showToast('تم تسجيل الدخول كإدارة بنجاح');
+    } else { 
+        showToast('كلمة المرور غير صحيحة'); 
+    }
 };
 
 window.handleAdminLogout = function() {
