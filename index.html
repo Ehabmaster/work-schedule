@@ -116,7 +116,7 @@ main{padding:20px 0 60px; position:relative; z-index:1;}
 
 .dept-grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:18px; direction:ltr;}
 .dept-tile{
-  direction:rtl; text-align:center; overflow:hidden;
+  direction:rtl; text-align:center; overflow:hidden; cursor:pointer;
   background:
     radial-gradient(120% 140% at 15% 8%, rgba(255,255,255,.55) 0%, rgba(255,255,255,0) 45%),
     linear-gradient(155deg, var(--dept-light) 0%, var(--dept-color) 55%, var(--dept-dark) 100%);
@@ -184,9 +184,6 @@ main{padding:20px 0 60px; position:relative; z-index:1;}
   .table-container { border: none; box-shadow: none; }
   .schedule-table th, .schedule-table td { border: 1px solid #000 !important; }
 }
-
-
-.hidden { display: none !important; }
 </style>
 </head>
 <body>
@@ -613,16 +610,21 @@ window.setMode = function(mode) {
 function renderLanding() {
   var grid = document.getElementById('deptGrid');
   grid.innerHTML = DEPARTMENTS.map(function(dept){
-    return '<div class="dept-tile" style="--dept-color:' + dept.color + ';--dept-light:' + dept.colorLight + ';--dept-dark:' + dept.colorDark + '">' +
+    var actionText = isAdmin ? 'تعديل جدول القسم ←' : 'استعراض جدول القسم ←';
+    return '<div class="dept-tile" onclick="openDepartment(\'' + dept.id + '\')" style="--dept-color:' + dept.color + ';--dept-light:' + dept.colorLight + ';--dept-dark:' + dept.colorDark + '">' +
       '<h3>قسم ' + dept.name + '</h3>' +
-      '<button class="dept-tile-action" onclick="openDepartment(\'' + dept.id + '\')">استعراض جدول القسم ←</button>' +
+      '<button class="dept-tile-action">' + actionText + '</button>' +
     '</div>';
   }).join('');
 }
 
 window.openDepartment = function(deptId) {
   activeDeptId = deptId;
-  navigateTo('emp-schedule');
+  if (isAdmin) {
+    navigateTo('admin');
+  } else {
+    navigateTo('emp-schedule');
+  }
 };
 
 function generateDepartmentTable(deptId, startDateVal, daysCount, isEditable, filterQuery) {
@@ -745,6 +747,7 @@ window.handleAdminRangeChange = function() {
 };
 
 window.renderAdmin = function() {
+  if(!activeDeptId) activeDeptId = DEPARTMENTS[0].id;
   var tabBar = document.getElementById('adminTabBar');
   tabBar.innerHTML = DEPARTMENTS.map(function(d){
     return '<button class="tab-btn ' + (activeDeptId===d.id?'active':'') + '" onclick="switchAdminTab(\'' + d.id + '\')">' + d.icon + ' ' + d.name + '</button>';
@@ -866,7 +869,7 @@ window.handleAddEmployee = function() {
 };
 
 window.handleRemoveEmployee = function(deptId, empId) {
-  event.stopPropagation();
+  if (event) event.stopPropagation();
   if(confirm("هل أنت متأكد من إزالة هذا الموظف من القسم؟")) {
     state.employees[deptId] = state.employees[deptId].filter(function(e) { return e.id !== empId; });
     saveStateToFirebase(function(){
@@ -981,22 +984,21 @@ window.handleSaveCellChanges = function(deptId, empId, dateKey) {
 };
 
 window.closeLoginModal = function() { document.getElementById('modal-login').hidden = true; setMode('employee'); };
+
 window.submitLogin = function() {
-    if(document.getElementById('loginPassword').value === '1994y1994') {
-        isAdmin = true;
-        document.getElementById('modal-login').hidden = true;
-        document.getElementById('adminLogoutBtn').hidden = false;
-        
-        // تفريغ القسم المحدد لكي تظهر الأقسام الأربعة أولاً
-        activeDeptId = null; 
-        
-        // إظهار واجهة الأقسام الرئيسية مباشرة دون الخروج من وضع الإدارة
-        renderLanding(); 
-        
-        showToast('تم تسجيل الدخول كإدارة بنجاح');
-    } else { 
-        showToast('كلمة المرور غير صحيحة'); 
-    }
+  if(document.getElementById('loginPassword').value === '1994y1994') {
+    isAdmin = true;
+    document.getElementById('modal-login').hidden = true;
+    document.getElementById('adminLogoutBtn').hidden = false;
+    document.getElementById('btnModeAdmin').classList.add('active');
+    document.getElementById('btnModeEmp').classList.remove('active');
+    
+    // إبقاء المستخدم في الصفحة الرئيسية مع تحديث الأزرار للوضع الأدمن
+    renderLanding();
+    showToast('تم تسجيل الدخول كإدارة بنجاح');
+  } else { 
+    showToast('كلمة المرور غير صحيحة'); 
+  }
 };
 
 window.handleAdminLogout = function() {
@@ -1015,20 +1017,7 @@ function showToast(msg) {
 
 document.getElementById('todayPill').innerText = new Date().toLocaleDateString('ar-EG');
 renderLanding();
-// تعديل سلوك كروت الأقسام لتفتح التعديل فوراً للأدمن
-const originalRenderLanding = renderLanding;
-renderLanding = function() {
-    originalRenderLanding();
-    if (isAdmin) {
-        document.querySelectorAll('.dept-card, [data-dept-id]').forEach(card => {
-            card.onclick = function() {
-                const deptId = this.getAttribute('data-dept-id') || this.id;
-                if (deptId) activeDeptId = deptId;
-                navigateTo('admin');
-            };
-        });
-    }
-};
+
 })();
 </script>
 </body>
