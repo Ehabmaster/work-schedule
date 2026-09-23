@@ -194,16 +194,7 @@ main{padding:20px 0 60px; position:relative; z-index:1;}
 </style>
 </head>
 <body>
-<!-- 1. واجهة اختيار القسم (تظهر أولاً) -->
-<div id="departments-selection" class="container" style="max-width: 1000px; margin: 20px auto; padding: 20px; text-align: center;">
-    <h2 style="margin-bottom: 20px;">اختر القسم للإدارة</h2>
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px;">
-        <div class="sales" onclick="openDepartment('sales', 'قسم المبيعات')" style="padding: 20px; border-radius: 10px; cursor: pointer; font-weight: bold;">📊 قسم المبيعات</div>
-        <div class="hr" onclick="openDepartment('hr', 'قسم الموارد البشرية')" style="padding: 20px; border-radius: 10px; cursor: pointer; font-weight: bold;">👥 الموارد البشرية</div>
-        <div class="support" onclick="openDepartment('support', 'قسم الدعم الفني')" style="padding: 20px; border-radius: 10px; cursor: pointer; font-weight: bold;">🛠️ الدعم الفني</div>
-        <div class="finance" onclick="openDepartment('finance', 'القسم المالي')" style="padding: 20px; border-radius: 10px; cursor: pointer; font-weight: bold;">💰 القسم المالي</div>
-    </div>
-</div>
+
 <div id="toast" class="toast"></div>
 
 <svg class="corner-ornament tl" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
