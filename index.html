@@ -982,13 +982,16 @@ window.handleSaveCellChanges = function(deptId, empId, dateKey) {
 
 window.closeLoginModal = function() { document.getElementById('modal-login').hidden = true; setMode('employee'); };
 window.submitLogin = function() {
-  if(document.getElementById('loginPassword').value === '1994y1994') {
-    isAdmin = true;
-    document.getElementById('modal-login').hidden = true;
-    document.getElementById('adminLogoutBtn').hidden = false;
-    if(!activeDeptId) activeDeptId = DEPARTMENTS[0].id;
-    navigateTo('admin');
-  } else { showToast('كلمة المرور غير صحيحة'); }
+    if(document.getElementById('loginPassword').value === '1994y1994') {
+        isAdmin = true;
+        document.getElementById('modal-login').hidden = true;
+        document.getElementById('adminLogoutBtn').hidden = false;
+        
+        // تفريغ القسم المحدد لكي تظهر الأقسام الأربعة أولاً بدلاً من فتح جدول الشاورما مباشرة
+        activeDeptId = null; 
+        navigateTo('landing'); 
+        
+    } else { showToast('كلمة المرور غير صحيحة'); }
 };
 
 window.handleAdminLogout = function() {
