@@ -1015,7 +1015,20 @@ function showToast(msg) {
 
 document.getElementById('todayPill').innerText = new Date().toLocaleDateString('ar-EG');
 renderLanding();
-
+// تعديل سلوك كروت الأقسام لتفتح التعديل فوراً للأدمن
+const originalRenderLanding = renderLanding;
+renderLanding = function() {
+    originalRenderLanding();
+    if (isAdmin) {
+        document.querySelectorAll('.dept-card, [data-dept-id]').forEach(card => {
+            card.onclick = function() {
+                const deptId = this.getAttribute('data-dept-id') || this.id;
+                if (deptId) activeDeptId = deptId;
+                navigateTo('admin');
+            };
+        });
+    }
+};
 })();
 </script>
 </body>
