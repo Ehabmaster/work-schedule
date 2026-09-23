@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="theme-color" content="#c0272a">
+<meta name="theme-color" content="#b83232">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="ينابيع 1994">
@@ -20,45 +20,25 @@
 
 <style>
 :root{
-  --ink:#3a2412;
-  --ink-soft:#7a6148;
-  --paper:#8a1414;
-  --surface:#f4e6c8;
-  --surface-raised:#fffaf0;
-  --line:#e3cfa0;
-  --line-strong:#c9971d;
-  --rust:#c0272a;
-  --rust-ink:#8a1414;
-  --teal:#2f6f62;
-  --teal-ink:#1b4a40;
-  --gold:#c9971d;
-  --purple:#6b46c1;
-  --peak-bg:#fbe3da;
-  --peak-red:#8f3717;
+  --ink:#ede8e1;
+  --ink-soft:#b5a99a;
+  --paper:#1a1614;
+  --surface:#26201d;
+  --surface-raised:#302925;
+  --line:#423731;
+  --line-strong:#7a6859;
+  --rust:#b83232;
+  --rust-ink:#7d1d1d;
+  --teal:#3b7a6e;
+  --teal-ink:#a1ded2;
+  --gold:#d99b26;
+  --purple:#ab85e3;
+  --peak-bg:#381c1c;
+  --peak-red:#f05252;
   --radius-s:6px;
   --radius-m:10px;
   --font-display:'Tajawal', sans-serif;
   --font-body:'IBM Plex Sans Arabic', sans-serif;
-}
-
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){
-    --ink:#efe7d8;
-    --ink-soft:#c3b8a6;
-    --paper:#3a1210;
-    --surface:#2a1712;
-    --surface-raised:#33231b;
-    --line:#4a3627;
-    --line-strong:#c9971d;
-    --rust:#e2673b;
-    --rust-ink:#c0272a;
-    --teal:#5aa895;
-    --teal-ink:#a3e6d5;
-    --gold:#e0a638;
-    --purple:#9f7aea;
-    --peak-bg:#3b1716;
-    --peak-red:#ef4444;
-  }
 }
 
 *{box-sizing:border-box;}
@@ -70,20 +50,100 @@ body{
   -webkit-tap-highlight-color: transparent;
   background-color:var(--paper);
   background-image:
-    radial-gradient(ellipse 900px 480px at 50% -8%, rgba(255,255,255,.10), transparent 60%),
-    radial-gradient(ellipse 900px 560px at 50% 112%, rgba(0,0,0,.42), transparent 60%),
-    linear-gradient(180deg, var(--rust) 0%, var(--rust-ink) 55%, #3a0808 100%),
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90' viewBox='0 0 90 90'%3E%3Cg fill='none' stroke='%23000000' stroke-opacity='0.08' stroke-width='1.4'%3E%3Cpath d='M45 6 L78 45 L45 84 L12 45 Z'/%3E%3Ccircle cx='45' cy='45' r='12'/%3E%3C/g%3E%3C/svg%3E");
+    radial-gradient(ellipse 900px 480px at 50% -8%, rgba(255,255,255,.08), transparent 60%),
+    radial-gradient(ellipse 900px 560px at 50% 112%, rgba(0,0,0,.5), transparent 60%),
+    linear-gradient(180deg, #3d2b25 0%, #291b17 55%, #180e0c 100%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90' viewBox='0 0 90 90'%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='0.03' stroke-width='1.4'%3E%3Cpath d='M45 6 L78 45 L45 84 L12 45 Z'/%3E%3Ccircle cx='45' cy='45' r='12'/%3E%3C/g%3E%3C/svg%3E");
   background-attachment:fixed, fixed, fixed, fixed;
   background-repeat:no-repeat, no-repeat, no-repeat, repeat;
+  transition: background-color 0.4s ease, background-image 0.4s ease;
 }
+
+/* ألوان الأقسام للجدول */
+body[data-active-dept="shawarma"] {
+  --dept-theme-bg: #8c2525;
+  --dept-theme-header: #9e2b2b;
+  --dept-theme-border: #b83a3a;
+}
+body[data-active-dept="snack"] {
+  --dept-theme-bg: #9e7a1e;
+  --dept-theme-header: #b38b24;
+  --dept-theme-border: #cca02e;
+}
+body[data-active-dept="broasted"] {
+  --dept-theme-bg: #8a571c;
+  --dept-theme-header: #9c6320;
+  --dept-theme-border: #b5752b;
+}
+body[data-active-dept="callcenter"] {
+  --dept-theme-bg: #2d2a29;
+  --dept-theme-header: #383433;
+  --dept-theme-border: #4d4846;
+}
+
+/* تطبيقت ألوان الأقسام */
+body[data-active-dept] .content-card {
+  background: var(--dept-theme-bg) !important;
+  border-color: var(--dept-theme-border) !important;
+  color: #fcfaf7 !important;
+}
+body[data-active-dept] .content-card h2,
+body[data-active-dept] .content-card h3,
+body[data-active-dept] .content-card label {
+  color: #ffffff !important;
+}
+body[data-active-dept] .content-card span,
+body[data-active-dept] .content-card small {
+  color: #f0e6df !important;
+}
+body[data-active-dept] .controls-bar {
+  background: rgba(0, 0, 0, 0.22) !important;
+  border-color: var(--dept-theme-border) !important;
+}
+body[data-active-dept] .controls-bar select,
+body[data-active-dept] .controls-bar input,
+body[data-active-dept] .search-box {
+  background: rgba(30, 24, 22, 0.85) !important;
+  color: #f3ece6 !important;
+  border-color: var(--dept-theme-border) !important;
+}
+body[data-active-dept] .table-container {
+  border-color: var(--dept-theme-border) !important;
+  background: rgba(0, 0, 0, 0.15) !important;
+}
+body[data-active-dept] .schedule-table th,
+body[data-active-dept] .schedule-table td {
+  border-color: var(--dept-theme-border) !important;
+  color: #ffffff !important;
+}
+body[data-active-dept] .schedule-table th {
+  background: var(--dept-theme-header) !important;
+  color: #ffffff !important;
+}
+body[data-active-dept] .schedule-table td {
+  background: rgba(0, 0, 0, 0.12) !important;
+}
+body[data-active-dept] .schedule-table td:nth-child(even) {
+  background: rgba(0, 0, 0, 0.22) !important;
+}
+body[data-active-dept] .schedule-table td:first-child {
+  background: var(--dept-theme-header) !important;
+  color: #ffffff !important;
+}
+
+body[data-active-dept] .cell-shift { color: #f2e3c6 !important; }
+body[data-active-dept] .cell-custom { color: #e5ccff !important; }
+body[data-active-dept] .cell-off { background: rgba(255, 255, 255, 0.22) !important; color: #ff3b3b !important; }
+body[data-active-dept] .cell-sub { color: #ffe399 !important; }
+body[data-active-dept] .cell-note { background: rgba(0,0,0,0.3) !important; color: #f7e1d7 !important; border-color: rgba(255,255,255,0.3) !important; }
+
 h1,h2,h3,h4{font-family:var(--font-display); margin:0; font-weight:800;}
 button, input, select, textarea{font-family:inherit; font-size:1em;}
 button{cursor:pointer;}
 
 .wrap{max-width:1240px; margin:0 auto; padding:0 16px; position:relative; z-index:1;}
 
-.corner-ornament{position:fixed; width:130px; height:130px; pointer-events:none; z-index:0; color:var(--gold); opacity:.85;}
+.corner-ornament{position:fixed; width:130px; height:130px; pointer-events:none; z-index:0; color:var(--gold); opacity:.65;}
 .corner-ornament.tl{top:0; left:0;}
 .corner-ornament.br{bottom:0; right:0; transform:rotate(180deg);}
 @media (max-width:700px){ .corner-ornament{display:none;} }
@@ -92,7 +152,24 @@ button{cursor:pointer;}
 .navbar-inner{max-width:1240px; margin:0 auto; padding:16px 60px; display:flex; align-items:center; justify-content:space-between; gap:12px;}
 @media (max-width:700px){ .navbar-inner{padding:10px 16px;} }
 .brand{display:flex; align-items:center; gap:12px; cursor:pointer;}
-.brand-mark{width:58px; height:58px; border-radius:14px; background:linear-gradient(160deg,#fffaf0,#f0e0b8); border:2px solid var(--gold); color:var(--rust-ink); display:flex; align-items:center; justify-content:center; font-size:28px; box-shadow:0 6px 16px rgba(0,0,0,.35), inset 0 1px 0 #fff;}
+
+/* اللوجو المدمج المحدث لضمان الظهور */
+.brand-mark-logo{
+  width:68px; height:68px; border-radius:14px; 
+  border:2px solid var(--gold);
+  box-shadow:0 6px 16px rgba(0,0,0,.35);
+  background-color: #b83232;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.brand-mark-logo img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 .brand-text h1{font-size:18px; color:#fff; text-shadow:0 2px 6px rgba(0,0,0,.45);}
 .brand-text span{font-size:11.5px; color:rgba(255,255,255,.82);}
 .nav-right{display:flex; align-items:center; gap:8px;}
@@ -104,33 +181,45 @@ button{cursor:pointer;}
 .btn-rust:hover{background:var(--rust-ink);}
 .btn-ghost{background:transparent; border-color:transparent;}
 .btn-sm{padding:4px 10px; font-size:12px;}
-.btn-danger{color: var(--peak-red); padding:2px 6px; border-radius:4px; font-size:11px;}
+.btn-danger{color: #ff6b6b; padding:2px 6px; border-radius:4px; font-size:11px;}
 
 main{padding:20px 0 60px; position:relative; z-index:1;}
 .view{display:none;}
 .view.active{display:block;}
 
 .mode-toggle{display:inline-flex; background:rgba(0,0,0,.28); border:1px solid rgba(255,255,255,.25); border-radius:999px; padding:4px; margin-bottom:22px;}
-.mode-btn{border:none; background:transparent; padding:9px 22px; border-radius:999px; font-weight:700; font-size:13.5px; color:rgba(255,255,255,.85);}
+.mode-btn{border:none; background:transparent; padding:99px 22px; border-radius:999px; font-weight:700; font-size:13.5px; color:rgba(255,255,255,.85); padding: 9px 22px;}
 .mode-btn.active{background:linear-gradient(160deg,#fffaf0,#f0e2c0); color:var(--rust-ink); box-shadow:0 4px 10px rgba(0,0,0,.25);}
 
 .dept-grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:18px; direction:ltr;}
 .dept-tile{
   direction:rtl; text-align:center; overflow:hidden; cursor:pointer;
   background:
-    radial-gradient(120% 140% at 15% 8%, rgba(255,255,255,.55) 0%, rgba(255,255,255,0) 45%),
+    radial-gradient(120% 140% at 15% 8%, rgba(255,255,255,.35) 0%, rgba(255,255,255,0) 45%),
     linear-gradient(155deg, var(--dept-light) 0%, var(--dept-color) 55%, var(--dept-dark) 100%);
-  border:1px solid rgba(0,0,0,.18);
+  border:1px solid rgba(255,255,255,.25);
   border-radius:18px; padding:24px 20px; min-height:150px;
   display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px;
   box-shadow:0 12px 26px -10px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.3);
   color:#fff;
+  transition: transform .2s, box-shadow .2s;
+}
+.dept-tile:hover{
+  transform: translateY(-4px);
+  box-shadow:0 16px 30px -8px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.4);
 }
 .dept-tile h3{font-size:19px; text-shadow:0 2px 6px rgba(0,0,0,.4); letter-spacing:.2px;}
 .dept-tile-action{margin-top:0; width:auto; min-width:65%; padding:9px 18px; border-radius:999px; border:1px solid rgba(255,255,255,.45); background:rgba(255,255,255,.16); color:#fff; font-weight:700; transition:background .15s;}
 .dept-tile-action:hover{background:rgba(255,255,255,.3);}
 
-.content-card{background:var(--surface-raised); border:1px solid var(--line-strong); border-radius:18px; padding:22px; box-shadow:0 16px 34px -12px rgba(30,6,4,.4);}
+.content-card{
+  background:var(--surface-raised);
+  border:1px solid var(--line-strong);
+  border-radius:18px;
+  padding:22px;
+  box-shadow:0 16px 34px -12px rgba(0,0,0,.5);
+  transition: background-color .3s ease, border-color .3s ease;
+}
 @media (max-width:640px){ .content-card{padding:14px; border-radius:14px;} }
 
 .controls-bar{display:flex; align-items:center; gap:12px; margin-bottom:14px; flex-wrap:wrap; background:var(--surface); padding:10px 14px; border-radius:var(--radius-m); border:1px solid var(--line); justify-content:space-between;}
@@ -146,8 +235,8 @@ main{padding:20px 0 60px; position:relative; z-index:1;}
 .schedule-table th, .schedule-table td{padding:10px 12px; border:1px solid var(--line);}
 .schedule-table th{background:var(--surface); font-weight:700; color:var(--ink-soft); position:sticky; top:0; z-index:2;}
 
-.schedule-table th.is-thu, .schedule-table td.is-thu{ background-color: var(--peak-bg) !important; }
-.schedule-table th.is-thu{color: var(--peak-red); border-bottom:2px solid var(--peak-red);}
+.schedule-table th.is-thu, .schedule-table td.is-thu{ background-color: rgba(255,255,255,0.18) !important; }
+.schedule-table th.is-thu{color: #ffe6e6; border-bottom:2px solid #ff8888;}
 .peak-tag{display:inline-block; font-size:10px; background:var(--peak-red); color:#fff; border-radius:3px; padding:1px 4px; font-weight:normal; margin-top:2px;}
 
 .cell-shift{font-weight:700; color:var(--teal-ink); font-size:12px; display:block;}
@@ -156,19 +245,21 @@ main{padding:20px 0 60px; position:relative; z-index:1;}
 .cell-sub{color:var(--gold); font-weight:700; font-size:11.5px; display:block;}
 .cell-note{display:block; font-size:10.5px; color:var(--rust-ink); margin-top:4px; background:var(--surface); padding:2px 4px; border-radius:4px; border:1px dashed var(--rust); white-space: normal; line-height: 1.2; width: max-content; margin-inline: auto;}
 
-.modal-overlay{position:fixed; inset:0; background:rgba(0,0,0,0.5); display:flex; align-items:center; justify-content:center; z-index:100; padding:16px;}
+/* نوافذ تعديل مريحة للعين */
+.modal-overlay{position:fixed; inset:0; background:rgba(0,0,0,0.78); display:flex; align-items:center; justify-content:center; z-index:100; padding:16px; backdrop-filter: blur(3px);}
 .modal-overlay[hidden]{display:none !important;}
-.modal{background:var(--surface-raised); width:100%; max-width:420px; border-radius:var(--radius-m); padding:20px; border:1px solid var(--line-strong);}
-.modal h3{font-size:16px; margin-bottom:12px;}
+.modal{background:#29221e; color:#ede8e1; width:100%; max-width:420px; border-radius:var(--radius-m); padding:20px; border:1px solid var(--line-strong); box-shadow:0 12px 32px rgba(0,0,0,0.6);}
+.modal h3{font-size:16px; margin-bottom:12px; color:#ffffff;}
 .field{margin-bottom:12px;}
-.field label{display:block; font-size:12px; color:var(--ink-soft); margin-bottom:4px; font-weight:700;}
-.field input, .field select, .field textarea{width:100%; padding:8px 10px; border:1px solid var(--line-strong); border-radius:var(--radius-s); background:var(--surface); color:var(--ink);}
+.field label{display:block; font-size:12px; color:#c7b8aa; margin-bottom:4px; font-weight:700;}
+.field input, .field select, .field textarea{width:100%; padding:8px 10px; border:1px solid var(--line-strong); border-radius:var(--radius-s); background:#1e1816; color:#ede8e1;}
+.field input:focus, .field select:focus, .field textarea:focus{border-color:var(--gold); outline:none;}
 .modal-actions{display:flex; gap:8px; margin-top:16px;}
 .modal-actions .btn{flex:1;}
 
 .tab-bar{display:flex; gap:6px; overflow-x:auto; padding-bottom:6px; margin-bottom:12px;}
-.tab-btn{flex:none; background:transparent; border:none; padding:8px 14px; font-size:13.5px; font-weight:700; color:var(--ink-soft); border-bottom:2px solid transparent;}
-.tab-btn.active{color:var(--rust); border-color:var(--rust);}
+.tab-btn{flex:none; background:rgba(255,255,255,0.15); border:none; padding:8px 16px; font-size:13.5px; font-weight:700; color:#ffffff; border-radius:8px; border-bottom:3px solid transparent;}
+.tab-btn.active{background:rgba(255,255,255,0.3); border-color:#ffffff; color:#ffffff;}
 
 .toast{position:fixed; bottom:18px; left:50%; transform:translateX(-50%) translateY(20px); opacity:0; background:var(--rust-ink); color:#fffaf0; padding:10px 20px; border-radius:999px; font-size:13px; font-weight:600; z-index:200; transition:all .2s ease;}
 .toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
@@ -179,10 +270,10 @@ main{padding:20px 0 60px; position:relative; z-index:1;}
 
 @media print {
   .navbar, .controls-bar, .mode-toggle, .btn, .dept-note-card, .corner-ornament { display: none !important; }
-  body { background: #fff; color: #000; }
-  .content-card{ box-shadow:none; border:none; padding:0; }
+  body { background: #fff !important; color: #000 !important; }
+  .content-card{ box-shadow:none; border:none; padding:0; background:none !important; color:#000 !important; }
   .table-container { border: none; box-shadow: none; }
-  .schedule-table th, .schedule-table td { border: 1px solid #000 !important; }
+  .schedule-table th, .schedule-table td { border: 1px solid #000 !important; color:#000 !important; background:none !important; }
 }
 </style>
 </head>
@@ -220,7 +311,15 @@ main{padding:20px 0 60px; position:relative; z-index:1;}
 <header class="navbar">
   <div class="navbar-inner">
     <div class="brand" onclick="navigateTo('landing')">
-      <div class="brand-mark">🍽️</div>
+      <!-- استخدام عنصر SVG مع إدراج الصورة مباشرة لمنع مشاكل التحميل -->
+      <div class="brand-mark-logo">
+        <svg viewBox="0 0 100 100" width="100%" height="100%">
+          <rect width="100" height="100" fill="#a82e2e" rx="15"/>
+          <path d="M15,65 Q50,25 85,65" fill="none" stroke="#fcd34d" stroke-width="5"/>
+          <text x="50" y="55" font-family="'Tajawal', sans-serif" font-size="22" font-weight="900" fill="#ffffff" text-anchor="middle">ينابيع</text>
+          <text x="50" y="75" font-family="'Tajawal', sans-serif" font-size="16" font-weight="700" fill="#fcd34d" text-anchor="middle">الشام</text>
+        </svg>
+      </div>
       <div class="brand-text">
         <h1>جدول دوام الموظفين <span id="syncStatus" class="sync-badge">جاري الاتصال...</span></h1>
         <span>yanabie1994 - نظام الإدارة المباشر</span>
@@ -254,7 +353,7 @@ main{padding:20px 0 60px; position:relative; z-index:1;}
     </div>
     <div style="margin-bottom:12px;">
       <h2 id="empScheduleTitle">جدول دوام القسم</h2>
-      <span style="font-size:13px; color:var(--ink-soft);">جدول منظم حسب التوقيت من الصباح إلى المساء.</span>
+      <span style="font-size:13px; opacity:0.9;">جدول منظم حسب التوقيت من الصباح إلى المساء.</span>
     </div>
     <div class="controls-bar">
       <div class="controls-group">
@@ -284,7 +383,7 @@ main{padding:20px 0 60px; position:relative; z-index:1;}
     </div>
     <div style="margin-bottom:12px;">
       <h2>لوحة التحكم الشاملة - الإدارة</h2>
-      <span style="font-size:13px; color:var(--ink-soft);">اضغط على أي خلية لتعديل الدوام، ثم اضغط حفظ التغيرات.</span>
+      <span style="font-size:13px; opacity:0.9;">اضغط على أي خلية لتعديل الدوام، ثم اضغط حفظ التغيرات.</span>
     </div>
     <div class="tab-bar" id="adminTabBar"></div>
     <div class="controls-bar">
@@ -303,7 +402,7 @@ main{padding:20px 0 60px; position:relative; z-index:1;}
     </div>
     <div id="adminTabContent"></div>
 
-    <div class="dept-note-card" style="margin-top:20px; padding:16px; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-m);">
+    <div class="dept-note-card" style="margin-top:20px; padding:16px; background:rgba(0,0,0,0.2); border:1px solid rgba(255,255,255,0.2); border-radius:var(--radius-m);">
       <h3 style="margin-bottom:10px;">📝 ملاحظة وتنبيهات الإدارة للقسم</h3>
       <div class="field">
         <textarea id="deptNoteText" rows="3" placeholder="اكتب ملاحظة القسم هنا..."></textarea>
@@ -348,19 +447,13 @@ main{padding:20px 0 60px; position:relative; z-index:1;}
 (function(){
 "use strict";
 
-// PWA Dynamic Manifest Setup
 var manifestData = {
   "name": "جدول دوام ينابيع 1994",
   "short_name": "ينابيع 1994",
   "start_url": ".",
   "display": "standalone",
-  "background_color": "#7a0f0f",
-  "theme_color": "#c0272a",
-  "icons": [{
-    "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍽️</text></svg>",
-    "sizes": "192x192 512x512",
-    "type": "image/svg+xml"
-  }]
+  "background_color": "#332a26",
+  "theme_color": "#b83232"
 };
 var stringManifest = JSON.stringify(manifestData);
 var blob = new Blob([stringManifest], {type: 'application/json'});
@@ -402,10 +495,10 @@ var db = firebase.database();
 var dbRef = db.ref('restaurant_schedule');
 
 var DEPARTMENTS = [
-  {id:'shawarma', name:'الشاورما', icon:'🌯', color:'#c0272a', colorLight:'#e2624a', colorDark:'#6e1210'},
-  {id:'broasted', name:'البروستد', icon:'🍗', color:'#c9761f', colorLight:'#f0a856', colorDark:'#7a3d0d'},
-  {id:'snack', name:'السناك', icon:'🍟', color:'#2f8f5f', colorLight:'#6fcf9e', colorDark:'#14432c'},
-  {id:'callcenter', name:'سنتر الاتصال', icon:'📞', color:'#4a90c4', colorLight:'#9fd7ec', colorDark:'#244f6b'}
+  {id:'shawarma', name:'الشاورما', icon:'🌯', color:'#a82e2e', colorLight:'#c84545', colorDark:'#691c1c'},
+  {id:'snack', name:'السناك', icon:'🍟', color:'#b38b24', colorLight:'#cfa63a', colorDark:'#7a5c11'},
+  {id:'broasted', name:'البروستد', icon:'🍗', color:'#a6671e', colorLight:'#c7812c', colorDark:'#6e410d'},
+  {id:'callcenter', name:'سنتر الاتصال', icon:'📞', color:'#33302f', colorLight:'#4c4846', colorDark:'#1f1d1c'}
 ];
 
 var BASE_SHIFTS = [
@@ -429,7 +522,6 @@ var currentUploadedMedia = [];
 var isAdmin = false;
 var activeDeptId = null;
 
-// Tries reading cached local data first for fast load
 var localCached = localStorage.getItem('yanabie_schedule_cache');
 if(localCached) {
   try { state = JSON.parse(localCached); } catch(e){}
@@ -502,7 +594,7 @@ function saveStateToFirebase(callback) {
   localStorage.setItem('yanabie_schedule_cache', JSON.stringify(state));
   dbRef.set(state, function(error) {
     if (error) {
-      showToast('خطأ: فشل الحفظ! قد يكون حجم الميديا كبيراً.');
+      showToast('خطأ: فشل الحفظ!');
     } else {
       if (callback) callback();
     }
@@ -589,7 +681,10 @@ window.navigateTo = function(view) {
   var target = document.getElementById('view-' + view);
   if(target) target.classList.add('active');
 
-  if(view === 'landing') renderLanding();
+  if(view === 'landing') {
+    document.body.removeAttribute('data-active-dept');
+    renderLanding();
+  }
   else if(view === 'emp-schedule') renderEmpSchedule();
   else if(view === 'admin') renderAdmin();
 };
@@ -608,6 +703,7 @@ window.setMode = function(mode) {
 };
 
 function renderLanding() {
+  document.body.removeAttribute('data-active-dept');
   var grid = document.getElementById('deptGrid');
   grid.innerHTML = DEPARTMENTS.map(function(dept){
     var actionText = isAdmin ? 'تعديل جدول القسم ←' : 'استعراض جدول القسم ←';
@@ -642,7 +738,7 @@ function generateDepartmentTable(deptId, startDateVal, daysCount, isEditable, fi
   var daysArabic = ['أحد', 'إثنين', 'ثلاثاء', 'أربعاء', 'خميس', 'جمعة', 'سبت'];
 
   var html = '<div class="table-container"><table class="schedule-table"><thead><tr>' +
-    '<th style="min-width:140px; position:sticky; right:0; background:var(--surface); z-index:3;">الموظف</th>';
+    '<th style="min-width:140px; position:sticky; right:0; z-index:3;">الموظف</th>';
 
   dates.forEach(function(d){
     var isThu = (d.getDay() === 4);
@@ -653,11 +749,11 @@ function generateDepartmentTable(deptId, startDateVal, daysCount, isEditable, fi
   html += '</tr></thead><tbody>';
 
   if(emps.length === 0) {
-    html += '<tr><td colspan="' + (dates.length + 1) + '" style="padding:20px; color:var(--ink-soft);">لا توجد نتائج مطابقة للبحث.</td></tr>';
+    html += '<tr><td colspan="' + (dates.length + 1) + '" style="padding:20px;">لا توجد نتائج مطابقة للبحث.</td></tr>';
   }
 
   emps.forEach(function(emp){
-    html += '<tr><td style="font-weight:700; position:sticky; right:0; background:var(--surface-raised); z-index:2; text-align:right;">' + 
+    html += '<tr><td style="font-weight:700; position:sticky; right:0; z-index:2; text-align:right;">' + 
       emp.name + 
       (isEditable ? ' <button class="btn-ghost btn-danger" onclick="handleRemoveEmployee(\''+deptId+'\', \''+emp.id+'\')" title="حذف">🗑️</button>' : '') +
       '</td>';
@@ -670,11 +766,11 @@ function generateDepartmentTable(deptId, startDateVal, daysCount, isEditable, fi
       var cellContent = '';
       if(status.isOff) {
         cellContent = '<span class="cell-off">إجازة</span>';
-        if(status.subName) cellContent += '<br><small style="font-size:10px; color:var(--ink-soft);">البديل: ' + status.subName + '</small>';
+        if(status.subName) cellContent += '<br><small style="font-size:10px;">البديل: ' + status.subName + '</small>';
       }
       else if(status.isSub) {
         cellContent = '<span class="cell-sub">بديل (' + status.text + ')</span>';
-        cellContent += '<br><small style="font-size:10px; color:var(--ink-soft);">عن: ' + status.subFor + '</small>';
+        cellContent += '<br><small style="font-size:10px;">عن: ' + status.subFor + '</small>';
       }
       else {
         var cls = status.isCustom ? 'cell-custom' : 'cell-shift';
@@ -700,6 +796,8 @@ function generateDepartmentTable(deptId, startDateVal, daysCount, isEditable, fi
 
 window.renderEmpSchedule = function() {
   if(!activeDeptId) return navigateTo('landing');
+  document.body.setAttribute('data-active-dept', activeDeptId);
+
   var dept = DEPARTMENTS.find(function(d){ return d.id === activeDeptId; });
   document.getElementById('empScheduleTitle').innerText = 'جدول دوام: قسم ' + dept.name;
 
@@ -721,14 +819,14 @@ window.renderEmpSchedule = function() {
   if (noteData.text || (noteData.media && noteData.media.length > 0)) {
     var mediaHtml = (noteData.media || []).map(function(item) {
       return item.type === 'image'
-        ? '<img src="' + item.url + '" style="max-width:220px; max-height:160px; border-radius:8px; border:1px solid var(--line); margin:5px;">'
-        : '<video src="' + item.url + '" controls style="max-width:250px; max-height:160px; border-radius:8px; border:1px solid var(--line); margin:5px;"></video>';
+        ? '<img src="' + item.url + '" style="max-width:220px; max-height:160px; border-radius:8px; border:1px solid rgba(255,255,255,0.3); margin:5px;">'
+        : '<video src="' + item.url + '" controls style="max-width:250px; max-height:160px; border-radius:8px; border:1px solid rgba(255,255,255,0.3); margin:5px;"></video>';
     }).join('');
 
     displayBox.innerHTML = 
-      '<div style="background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-m); padding:16px;">' +
-        '<h4 style="color:var(--rust); margin-bottom:8px;">📌 ملاحظات وتوجيهات الإدارة للقسم:</h4>' +
-        '<p style="margin:0 0 10px 0; font-size:14px; white-space:pre-wrap;">' + (noteData.text || 'لا توجد ملاحظات نصية.') + '</p>' +
+      '<div style="background:rgba(0,0,0,0.22); border:1px solid rgba(255,255,255,0.2); border-radius:var(--radius-m); padding:16px;">' +
+        '<h4 style="color:#ffffff; margin-bottom:8px;">📌 ملاحظات وتوجيهات الإدارة للقسم:</h4>' +
+        '<p style="margin:0 0 10px 0; font-size:14px; white-space:pre-wrap; color:#f0e6df;">' + (noteData.text || 'لا توجد ملاحظات نصية.') + '</p>' +
         '<div style="display:flex; gap:10px; flex-wrap:wrap;">' + mediaHtml + '</div>' +
       '</div>';
   } else {
@@ -748,6 +846,8 @@ window.handleAdminRangeChange = function() {
 
 window.renderAdmin = function() {
   if(!activeDeptId) activeDeptId = DEPARTMENTS[0].id;
+  document.body.setAttribute('data-active-dept', activeDeptId);
+
   var tabBar = document.getElementById('adminTabBar');
   tabBar.innerHTML = DEPARTMENTS.map(function(d){
     return '<button class="tab-btn ' + (activeDeptId===d.id?'active':'') + '" onclick="switchAdminTab(\'' + d.id + '\')">' + d.icon + ' ' + d.name + '</button>';
@@ -993,7 +1093,6 @@ window.submitLogin = function() {
     document.getElementById('btnModeAdmin').classList.add('active');
     document.getElementById('btnModeEmp').classList.remove('active');
     
-    // إبقاء المستخدم في الصفحة الرئيسية مع تحديث الأزرار للوضع الأدمن
     renderLanding();
     showToast('تم تسجيل الدخول كإدارة بنجاح');
   } else { 
