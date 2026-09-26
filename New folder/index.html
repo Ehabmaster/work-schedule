@@ -6,9 +6,9 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="theme-color" content="#b83232">
+<meta name="theme-color" content="#0f2b48">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="ينابيع 1994">
 <title>جدول دوام الموظفين - yanabie1994</title>
 
@@ -20,23 +20,23 @@
 
 <style>
 :root{
-  --ink:#ede8e1;
-  --ink-soft:#b5a99a;
-  --paper:#1a1614;
-  --surface:#26201d;
-  --surface-raised:#302925;
-  --line:#423731;
-  --line-strong:#7a6859;
-  --rust:#b83232;
-  --rust-ink:#7d1d1d;
-  --teal:#3b7a6e;
-  --teal-ink:#a1ded2;
-  --gold:#d99b26;
-  --purple:#ab85e3;
-  --peak-bg:#381c1c;
-  --peak-red:#f05252;
-  --radius-s:6px;
-  --radius-m:10px;
+  /* ألوان ناصعة على طراز بنكي أنيق */
+  --ink:#1e293b;
+  --ink-soft:#64748b;
+  --paper:#f8fafc;
+  --surface:#ffffff;
+  --surface-raised:#ffffff;
+  --line:#e2e8f0;
+  --line-strong:#cbd5e1;
+  --bank-blue:#0f2b48;
+  --bank-blue-light:#1e40af;
+  --bank-accent:#2563eb;
+  --gold:#d97706;
+  --purple:#7c3aed;
+  --peak-bg:#fef2f2;
+  --peak-red:#dc2626;
+  --radius-s:8px;
+  --radius-m:12px;
   --font-display:'Tajawal', sans-serif;
   --font-body:'IBM Plex Sans Arabic', sans-serif;
 }
@@ -49,93 +49,88 @@ body{
   font-family:var(--font-body); font-size:14.5px; line-height:1.5;
   -webkit-tap-highlight-color: transparent;
   background-color:var(--paper);
-  background-image:
-    radial-gradient(ellipse 900px 480px at 50% -8%, rgba(255,255,255,.08), transparent 60%),
-    radial-gradient(ellipse 900px 560px at 50% 112%, rgba(0,0,0,.5), transparent 60%),
-    linear-gradient(180deg, #3d2b25 0%, #291b17 55%, #180e0c 100%),
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90' viewBox='0 0 90 90'%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='0.03' stroke-width='1.4'%3E%3Cpath d='M45 6 L78 45 L45 84 L12 45 Z'/%3E%3Ccircle cx='45' cy='45' r='12'/%3E%3C/g%3E%3C/svg%3E");
-  background-attachment:fixed, fixed, fixed, fixed;
-  background-repeat:no-repeat, no-repeat, no-repeat, repeat;
-  transition: background-color 0.4s ease, background-image 0.4s ease;
+  background-image: linear-gradient(180deg, #edf2f7 0%, #f8fafc 100%);
+  background-attachment:fixed;
+  transition: background-color 0.4s ease;
 }
 
-/* ألوان الأقسام للجدول */
+/* ألوان الأقسام للجدول - تصميم ناصع */
 body[data-active-dept="shawarma"] {
-  --dept-theme-bg: #8c2525;
-  --dept-theme-header: #9e2b2b;
-  --dept-theme-border: #b83a3a;
+  --dept-theme-bg: #ffffff;
+  --dept-theme-header: #0f2b48;
+  --dept-theme-border: #cbd5e1;
 }
 body[data-active-dept="snack"] {
-  --dept-theme-bg: #9e7a1e;
-  --dept-theme-header: #b38b24;
-  --dept-theme-border: #cca02e;
+  --dept-theme-bg: #ffffff;
+  --dept-theme-header: #0f2b48;
+  --dept-theme-border: #cbd5e1;
 }
 body[data-active-dept="broasted"] {
-  --dept-theme-bg: #8a571c;
-  --dept-theme-header: #9c6320;
-  --dept-theme-border: #b5752b;
+  --dept-theme-bg: #ffffff;
+  --dept-theme-header: #0f2b48;
+  --dept-theme-border: #cbd5e1;
 }
 body[data-active-dept="callcenter"] {
-  --dept-theme-bg: #2d2a29;
-  --dept-theme-header: #383433;
-  --dept-theme-border: #4d4846;
+  --dept-theme-bg: #ffffff;
+  --dept-theme-header: #0f2b48;
+  --dept-theme-border: #cbd5e1;
 }
 
-/* تطبيقت ألوان الأقسام */
 body[data-active-dept] .content-card {
-  background: var(--dept-theme-bg) !important;
-  border-color: var(--dept-theme-border) !important;
-  color: #fcfaf7 !important;
+  background: var(--surface) !important;
+  border-color: var(--line-strong) !important;
+  color: var(--ink) !important;
 }
 body[data-active-dept] .content-card h2,
 body[data-active-dept] .content-card h3,
 body[data-active-dept] .content-card label {
-  color: #ffffff !important;
+  color: var(--bank-blue) !important;
 }
 body[data-active-dept] .content-card span,
 body[data-active-dept] .content-card small {
-  color: #f0e6df !important;
+  color: var(--ink-soft) !important;
 }
 body[data-active-dept] .controls-bar {
-  background: rgba(0, 0, 0, 0.22) !important;
-  border-color: var(--dept-theme-border) !important;
+  background: #f1f5f9 !important;
+  border-color: var(--line) !important;
 }
 body[data-active-dept] .controls-bar select,
 body[data-active-dept] .controls-bar input,
 body[data-active-dept] .search-box {
-  background: rgba(30, 24, 22, 0.85) !important;
-  color: #f3ece6 !important;
-  border-color: var(--dept-theme-border) !important;
+  background: #ffffff !important;
+  color: var(--ink) !important;
+  border-color: var(--line-strong) !important;
 }
 body[data-active-dept] .table-container {
-  border-color: var(--dept-theme-border) !important;
-  background: rgba(0, 0, 0, 0.15) !important;
+  border-color: var(--line) !important;
+  background: #ffffff !important;
 }
 body[data-active-dept] .schedule-table th,
 body[data-active-dept] .schedule-table td {
-  border-color: var(--dept-theme-border) !important;
-  color: #ffffff !important;
+  border-color: var(--line) !important;
+  color: var(--ink) !important;
 }
 body[data-active-dept] .schedule-table th {
-  background: var(--dept-theme-header) !important;
+  background: var(--bank-blue) !important;
   color: #ffffff !important;
 }
 body[data-active-dept] .schedule-table td {
-  background: rgba(0, 0, 0, 0.12) !important;
+  background: #ffffff !important;
 }
 body[data-active-dept] .schedule-table td:nth-child(even) {
-  background: rgba(0, 0, 0, 0.22) !important;
+  background: #f8fafc !important;
 }
 body[data-active-dept] .schedule-table td:first-child {
-  background: var(--dept-theme-header) !important;
-  color: #ffffff !important;
+  background: #f1f5f9 !important;
+  color: var(--bank-blue) !important;
+  font-weight: bold;
 }
 
-body[data-active-dept] .cell-shift { color: #f2e3c6 !important; }
-body[data-active-dept] .cell-custom { color: #e5ccff !important; }
-body[data-active-dept] .cell-off { background: rgba(255, 255, 255, 0.22) !important; color: #ff3b3b !important; }
-body[data-active-dept] .cell-sub { color: #ffe399 !important; }
-body[data-active-dept] .cell-note { background: rgba(0,0,0,0.3) !important; color: #f7e1d7 !important; border-color: rgba(255,255,255,0.3) !important; }
+body[data-active-dept] .cell-shift { color: #1e40af !important; }
+body[data-active-dept] .cell-custom { color: #6b21a8 !important; }
+body[data-active-dept] .cell-off { background: #fee2e2 !important; color: #dc2626 !important; }
+body[data-active-dept] .cell-sub { color: #b45309 !important; }
+body[data-active-dept] .cell-note { background: #fffbe3 !important; color: #92400e !important; border-color: #fde047 !important; }
 
 h1,h2,h3,h4{font-family:var(--font-display); margin:0; font-weight:800;}
 button, input, select, textarea{font-family:inherit; font-size:1em;}
@@ -143,133 +138,116 @@ button{cursor:pointer;}
 
 .wrap{max-width:1240px; margin:0 auto; padding:0 16px; position:relative; z-index:1;}
 
-.corner-ornament{position:fixed; width:130px; height:130px; pointer-events:none; z-index:0; color:var(--gold); opacity:.65;}
-.corner-ornament.tl{top:0; left:0;}
-.corner-ornament.br{bottom:0; right:0; transform:rotate(180deg);}
-@media (max-width:700px){ .corner-ornament{display:none;} }
-
-.navbar{position:sticky; top:0; z-index:40; background:transparent; border-bottom:none;}
-.navbar-inner{max-width:1240px; margin:0 auto; padding:16px 60px; display:flex; align-items:center; justify-content:space-between; gap:12px;}
-@media (max-width:700px){ .navbar-inner{padding:10px 16px;} }
+.navbar{position:sticky; top:0; z-index:40; background:var(--bank-blue); border-bottom:3px solid var(--gold); box-shadow:0 4px 12px rgba(0,0,0,0.08);}
+.navbar-inner{max-width:1240px; margin:0 auto; padding:12px 20px; display:flex; align-items:center; justify-content:space-between; gap:12px;}
 .brand{display:flex; align-items:center; gap:12px; cursor:pointer;}
 
-/* اللوجو المدمج المحدث لضمان الظهور */
 .brand-mark-logo{
-  width:68px; height:68px; border-radius:14px; 
+  width:50px; height:50px; border-radius:10px; 
   border:2px solid var(--gold);
-  box-shadow:0 6px 16px rgba(0,0,0,.35);
-  background-color: #b83232;
+  background-color: var(--bank-blue);
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
 }
-.brand-mark-logo img{
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
 
-.brand-text h1{font-size:18px; color:#fff; text-shadow:0 2px 6px rgba(0,0,0,.45);}
+.brand-text h1{font-size:18px; color:#fff;}
 .brand-text span{font-size:11.5px; color:rgba(255,255,255,.82);}
 .nav-right{display:flex; align-items:center; gap:8px;}
-.date-pill{font-size:12px; color:#fff; background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.35); border-radius:999px; padding:4px 12px;}
+.date-pill{font-size:12px; color:#fff; background:rgba(255,255,255,.15); border:1px solid rgba(255,255,255,.25); border-radius:999px; padding:4px 12px;}
 .navbar .btn-ghost{color:#fff;}
 
-.btn{border:1px solid var(--line-strong); background:var(--surface-raised); color:var(--ink); border-radius:var(--radius-s); padding:7px 14px; font-size:13px; font-weight:600; transition: all .15s;}
-.btn-rust{background:var(--rust); border-color:var(--rust-ink); color:#fff;}
-.btn-rust:hover{background:var(--rust-ink);}
+.btn{border:1px solid var(--line-strong); background:#ffffff; color:var(--ink); border-radius:var(--radius-s); padding:7px 14px; font-size:13px; font-weight:600; transition: all .15s;}
+.btn-rust{background:var(--bank-blue); border-color:var(--bank-blue); color:#fff;}
+.btn-rust:hover{background:#1e3a5f;}
 .btn-ghost{background:transparent; border-color:transparent;}
 .btn-sm{padding:4px 10px; font-size:12px;}
-.btn-danger{color: #ff6b6b; padding:2px 6px; border-radius:4px; font-size:11px;}
+.btn-danger{color: #dc2626; padding:2px 6px; border-radius:4px; font-size:11px;}
+.btn-notify{background:#2563eb; color:#ffffff; border:none;}
 
 main{padding:20px 0 60px; position:relative; z-index:1;}
 .view{display:none;}
 .view.active{display:block;}
 
-.mode-toggle{display:inline-flex; background:rgba(0,0,0,.28); border:1px solid rgba(255,255,255,.25); border-radius:999px; padding:4px; margin-bottom:22px;}
-.mode-btn{border:none; background:transparent; padding:99px 22px; border-radius:999px; font-weight:700; font-size:13.5px; color:rgba(255,255,255,.85); padding: 9px 22px;}
-.mode-btn.active{background:linear-gradient(160deg,#fffaf0,#f0e2c0); color:var(--rust-ink); box-shadow:0 4px 10px rgba(0,0,0,.25);}
+.mode-toggle{display:inline-flex; background:#e2e8f0; border:1px solid #cbd5e1; border-radius:999px; padding:4px; margin-bottom:22px;}
+.mode-btn{border:none; background:transparent; border-radius:999px; font-weight:700; font-size:13.5px; color:#475569; padding: 8px 20px;}
+.mode-btn.active{background:var(--bank-blue); color:#ffffff; box-shadow:0 2px 6px rgba(0,0,0,.15);}
 
-.dept-grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:18px; direction:ltr;}
+.dept-grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:18px; direction:rtl;}
 .dept-tile{
   direction:rtl; text-align:center; overflow:hidden; cursor:pointer;
-  background:
-    radial-gradient(120% 140% at 15% 8%, rgba(255,255,255,.35) 0%, rgba(255,255,255,0) 45%),
-    linear-gradient(155deg, var(--dept-light) 0%, var(--dept-color) 55%, var(--dept-dark) 100%);
-  border:1px solid rgba(255,255,255,.25);
-  border-radius:18px; padding:24px 20px; min-height:150px;
+  background: #ffffff;
+  border:1px solid var(--line-strong);
+  border-radius:16px; padding:24px 20px; min-height:150px;
   display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px;
-  box-shadow:0 12px 26px -10px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.3);
-  color:#fff;
+  box-shadow:0 4px 12px rgba(0,0,0,.05);
+  color:var(--bank-blue);
   transition: transform .2s, box-shadow .2s;
 }
 .dept-tile:hover{
   transform: translateY(-4px);
-  box-shadow:0 16px 30px -8px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.4);
+  box-shadow:0 8px 20px rgba(0,0,0,.1);
 }
-.dept-tile h3{font-size:19px; text-shadow:0 2px 6px rgba(0,0,0,.4); letter-spacing:.2px;}
-.dept-tile-action{margin-top:0; width:auto; min-width:65%; padding:9px 18px; border-radius:999px; border:1px solid rgba(255,255,255,.45); background:rgba(255,255,255,.16); color:#fff; font-weight:700; transition:background .15s;}
-.dept-tile-action:hover{background:rgba(255,255,255,.3);}
+.dept-tile h3{font-size:20px; color:var(--bank-blue);}
+.dept-tile-action{margin-top:0; width:auto; min-width:65%; padding:8px 18px; border-radius:999px; border:1px solid var(--bank-blue); background:var(--bank-blue); color:#fff; font-weight:700;}
 
 .content-card{
-  background:var(--surface-raised);
+  background:#ffffff;
   border:1px solid var(--line-strong);
-  border-radius:18px;
+  border-radius:16px;
   padding:22px;
-  box-shadow:0 16px 34px -12px rgba(0,0,0,.5);
-  transition: background-color .3s ease, border-color .3s ease;
+  box-shadow:0 4px 16px rgba(0,0,0,.04);
 }
-@media (max-width:640px){ .content-card{padding:14px; border-radius:14px;} }
 
-.controls-bar{display:flex; align-items:center; gap:12px; margin-bottom:14px; flex-wrap:wrap; background:var(--surface); padding:10px 14px; border-radius:var(--radius-m); border:1px solid var(--line); justify-content:space-between;}
+.controls-bar{display:flex; align-items:center; gap:12px; margin-bottom:14px; flex-wrap:wrap; background:#f8fafc; padding:10px 14px; border-radius:var(--radius-m); border:1px solid var(--line); justify-content:space-between;}
 .controls-group{display:flex; align-items:center; gap:12px; flex-wrap:wrap;}
 .controls-bar label{font-weight:700; font-size:13px; color:var(--ink-soft);}
-.controls-bar select, .controls-bar input{border:1px solid var(--line-strong); border-radius:var(--radius-s); padding:6px 10px; background:var(--surface-raised); color:var(--ink);}
+.controls-bar select, .controls-bar input{border:1px solid var(--line-strong); border-radius:var(--radius-s); padding:6px 10px; background:#ffffff; color:var(--ink);}
 
-.search-box{display:flex; align-items:center; background:var(--surface-raised); border:1px solid var(--line-strong); border-radius:var(--radius-s); padding:2px 8px;}
+.search-box{display:flex; align-items:center; background:#ffffff; border:1px solid var(--line-strong); border-radius:var(--radius-s); padding:2px 8px;}
 .search-box input{border:none; outline:none; padding:4px; font-size:12.5px; background:transparent;}
 
-.table-container{width:100%; overflow-x:auto; border:1px solid var(--line); border-radius:var(--radius-m); background:var(--surface-raised); box-shadow:0 2px 4px rgba(0,0,0,0.02); -webkit-overflow-scrolling: touch;}
+.table-container{width:100%; overflow-x:auto; border:1px solid var(--line); border-radius:var(--radius-m); background:#ffffff; box-shadow:0 2px 4px rgba(0,0,0,0.02); -webkit-overflow-scrolling: touch;}
 .schedule-table{width:100%; border-collapse:collapse; text-align:center; font-size:12.5px; white-space:nowrap;}
 .schedule-table th, .schedule-table td{padding:10px 12px; border:1px solid var(--line);}
-.schedule-table th{background:var(--surface); font-weight:700; color:var(--ink-soft); position:sticky; top:0; z-index:2;}
+.schedule-table th{background:var(--bank-blue); font-weight:700; color:#ffffff; position:sticky; top:0; z-index:2;}
 
-.schedule-table th.is-thu, .schedule-table td.is-thu{ background-color: rgba(255,255,255,0.18) !important; }
-.schedule-table th.is-thu{color: #ffe6e6; border-bottom:2px solid #ff8888;}
+.schedule-table th.is-thu, .schedule-table td.is-thu{ background-color: #fef2f2 !important; }
+.schedule-table th.is-thu{color: #991b1b; border-bottom:2px solid #f87171;}
 .peak-tag{display:inline-block; font-size:10px; background:var(--peak-red); color:#fff; border-radius:3px; padding:1px 4px; font-weight:normal; margin-top:2px;}
 
-.cell-shift{font-weight:700; color:var(--teal-ink); font-size:12px; display:block;}
-.cell-custom{font-weight:700; color:var(--purple); font-size:12px; display:block;}
-.cell-off{color:var(--rust); font-weight:700; background:rgba(181,69,30,0.1); border-radius:4px; padding:2px 6px; display:inline-block;}
-.cell-sub{color:var(--gold); font-weight:700; font-size:11.5px; display:block;}
-.cell-note{display:block; font-size:10.5px; color:var(--rust-ink); margin-top:4px; background:var(--surface); padding:2px 4px; border-radius:4px; border:1px dashed var(--rust); white-space: normal; line-height: 1.2; width: max-content; margin-inline: auto;}
+.cell-shift{font-weight:700; color:#1e40af; font-size:12px; display:block;}
+.cell-custom{font-weight:700; color:#6b21a8; font-size:12px; display:block;}
+.cell-off{color:#dc2626; font-weight:700; background:#fee2e2; border-radius:4px; padding:2px 6px; display:inline-block;}
+.cell-sub{color:#b45309; font-weight:700; font-size:11.5px; display:block;}
+.cell-note{display:block; font-size:10.5px; color:#92400e; margin-top:4px; background:#fffbe3; padding:2px 4px; border-radius:4px; border:1px dashed #fde047; white-space: normal; line-height: 1.2; width: max-content; margin-inline: auto;}
 
-/* نوافذ تعديل مريحة للعين */
-.modal-overlay{position:fixed; inset:0; background:rgba(0,0,0,0.78); display:flex; align-items:center; justify-content:center; z-index:100; padding:16px; backdrop-filter: blur(3px);}
+/* النوافذ المنسدلة */
+.modal-overlay{position:fixed; inset:0; background:rgba(15,23,42,0.5); display:flex; align-items:center; justify-content:center; z-index:100; padding:16px; backdrop-filter: blur(2px);}
 .modal-overlay[hidden]{display:none !important;}
-.modal{background:#29221e; color:#ede8e1; width:100%; max-width:420px; border-radius:var(--radius-m); padding:20px; border:1px solid var(--line-strong); box-shadow:0 12px 32px rgba(0,0,0,0.6);}
-.modal h3{font-size:16px; margin-bottom:12px; color:#ffffff;}
+.modal{background:#ffffff; color:var(--ink); width:100%; max-width:420px; border-radius:var(--radius-m); padding:20px; border:1px solid var(--line-strong); box-shadow:0 12px 32px rgba(0,0,0,0.15);}
+.modal h3{font-size:16px; margin-bottom:12px; color:var(--bank-blue);}
 .field{margin-bottom:12px;}
-.field label{display:block; font-size:12px; color:#c7b8aa; margin-bottom:4px; font-weight:700;}
-.field input, .field select, .field textarea{width:100%; padding:8px 10px; border:1px solid var(--line-strong); border-radius:var(--radius-s); background:#1e1816; color:#ede8e1;}
-.field input:focus, .field select:focus, .field textarea:focus{border-color:var(--gold); outline:none;}
+.field label{display:block; font-size:12px; color:var(--ink-soft); margin-bottom:4px; font-weight:700;}
+.field input, .field select, .field textarea{width:100%; padding:8px 10px; border:1px solid var(--line-strong); border-radius:var(--radius-s); background:#ffffff; color:var(--ink);}
+.field input:focus, .field select:focus, .field textarea:focus{border-color:var(--bank-accent); outline:none;}
 .modal-actions{display:flex; gap:8px; margin-top:16px;}
 .modal-actions .btn{flex:1;}
 
 .tab-bar{display:flex; gap:6px; overflow-x:auto; padding-bottom:6px; margin-bottom:12px;}
-.tab-btn{flex:none; background:rgba(255,255,255,0.15); border:none; padding:8px 16px; font-size:13.5px; font-weight:700; color:#ffffff; border-radius:8px; border-bottom:3px solid transparent;}
-.tab-btn.active{background:rgba(255,255,255,0.3); border-color:#ffffff; color:#ffffff;}
+.tab-btn{flex:none; background:#e2e8f0; border:none; padding:8px 16px; font-size:13.5px; font-weight:700; color:var(--bank-blue); border-radius:8px;}
+.tab-btn.active{background:var(--bank-blue); color:#ffffff;}
 
-.toast{position:fixed; bottom:18px; left:50%; transform:translateX(-50%) translateY(20px); opacity:0; background:var(--rust-ink); color:#fffaf0; padding:10px 20px; border-radius:999px; font-size:13px; font-weight:600; z-index:200; transition:all .2s ease;}
+.toast{position:fixed; bottom:18px; left:50%; transform:translateX(-50%) translateY(20px); opacity:0; background:var(--bank-blue); color:#ffffff; padding:10px 20px; border-radius:999px; font-size:13px; font-weight:600; z-index:200; transition:all .2s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.15);}
 .toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
 .sync-badge{font-size:10px; padding:2px 6px; border-radius:4px; background:#10b981; color:#fff; font-weight:bold;}
 
 .media-item-box { position: relative; display: inline-block; }
-.media-remove-btn { position: absolute; top: -6px; right: -6px; background: red; color: white; border: none; border-radius: 50%; width: 20px; height: 20px; font-size: 11px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.media-remove-btn { position: absolute; top: -6px; right: -6px; background: #dc2626; color: white; border: none; border-radius: 50%; width: 20px; height: 20px; font-size: 11px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
 
 @media print {
-  .navbar, .controls-bar, .mode-toggle, .btn, .dept-note-card, .corner-ornament { display: none !important; }
+  .navbar, .controls-bar, .mode-toggle, .btn, .dept-note-card { display: none !important; }
   body { background: #fff !important; color: #000 !important; }
   .content-card{ box-shadow:none; border:none; padding:0; background:none !important; color:#000 !important; }
   .table-container { border: none; box-shadow: none; }
@@ -281,52 +259,25 @@ main{padding:20px 0 60px; position:relative; z-index:1;}
 
 <div id="toast" class="toast"></div>
 
-<svg class="corner-ornament tl" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-  <g fill="none" stroke="currentColor" stroke-linecap="round">
-    <path d="M6 92 C6 40 40 6 92 6" stroke-width="2"/>
-    <path d="M20 112 C20 55 55 20 112 20" stroke-width="1.1" opacity="0.5"/>
-    <path d="M34 34 q10 20 30 20 q20 0 30 -20" stroke-width="1.3" opacity="0.7"/>
-  </g>
-  <g fill="currentColor">
-    <circle cx="6" cy="6" r="4.5"/>
-    <circle cx="34" cy="34" r="2.3" opacity="0.8"/>
-    <circle cx="92" cy="6" r="2" opacity="0.55"/>
-    <circle cx="6" cy="92" r="2" opacity="0.55"/>
-  </g>
-</svg>
-<svg class="corner-ornament br" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-  <g fill="none" stroke="currentColor" stroke-linecap="round">
-    <path d="M6 92 C6 40 40 6 92 6" stroke-width="2"/>
-    <path d="M20 112 C20 55 55 20 112 20" stroke-width="1.1" opacity="0.5"/>
-    <path d="M34 34 q10 20 30 20 q20 0 30 -20" stroke-width="1.3" opacity="0.7"/>
-  </g>
-  <g fill="currentColor">
-    <circle cx="6" cy="6" r="4.5"/>
-    <circle cx="34" cy="34" r="2.3" opacity="0.8"/>
-    <circle cx="92" cy="6" r="2" opacity="0.55"/>
-    <circle cx="6" cy="92" r="2" opacity="0.55"/>
-  </g>
-</svg>
-
 <header class="navbar">
   <div class="navbar-inner">
     <div class="brand" onclick="navigateTo('landing')">
-      <!-- استخدام عنصر SVG مع إدراج الصورة مباشرة لمنع مشاكل التحميل -->
       <div class="brand-mark-logo">
         <svg viewBox="0 0 100 100" width="100%" height="100%">
-          <rect width="100" height="100" fill="#a82e2e" rx="15"/>
-          <path d="M15,65 Q50,25 85,65" fill="none" stroke="#fcd34d" stroke-width="5"/>
+          <rect width="100" height="100" fill="#0f2b48" rx="15"/>
+          <path d="M15,65 Q50,25 85,65" fill="none" stroke="#d97706" stroke-width="5"/>
           <text x="50" y="55" font-family="'Tajawal', sans-serif" font-size="22" font-weight="900" fill="#ffffff" text-anchor="middle">ينابيع</text>
-          <text x="50" y="75" font-family="'Tajawal', sans-serif" font-size="16" font-weight="700" fill="#fcd34d" text-anchor="middle">الشام</text>
+          <text x="50" y="75" font-family="'Tajawal', sans-serif" font-size="16" font-weight="700" fill="#d97706" text-anchor="middle">الشام</text>
         </svg>
       </div>
       <div class="brand-text">
         <h1>جدول دوام الموظفين <span id="syncStatus" class="sync-badge">جاري الاتصال...</span></h1>
-        <span>yanabie1994 - نظام الإدارة المباشر</span>
+        <span>yanabie1994 - النظام المباشر</span>
       </div>
     </div>
     <div class="nav-right">
       <span class="date-pill" id="todayPill"></span>
+      <button class="btn btn-notify btn-sm" id="btnEnableNotifications" onclick="requestNotificationPermission()">🔔 تفعيل الإشعارات</button>
       <button class="btn btn-rust btn-sm" id="pwaInstallBtn" hidden onclick="installPWA()">📲 تثبيت التطبيق</button>
       <button class="btn btn-ghost btn-sm" id="adminLogoutBtn" hidden onclick="handleAdminLogout()">خروج الإدارة</button>
     </div>
@@ -353,7 +304,7 @@ main{padding:20px 0 60px; position:relative; z-index:1;}
     </div>
     <div style="margin-bottom:12px;">
       <h2 id="empScheduleTitle">جدول دوام القسم</h2>
-      <span style="font-size:13px; opacity:0.9;">جدول منظم حسب التوقيت من الصباح إلى المساء.</span>
+      <span style="font-size:13px; opacity:0.9;">جدول منظم ومحدث لحظياً مع خدمة التنبيهات.</span>
     </div>
     <div class="controls-bar">
       <div class="controls-group">
@@ -379,11 +330,11 @@ main{padding:20px 0 60px; position:relative; z-index:1;}
     <div class="content-card">
     <div style="margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;">
       <button class="btn btn-ghost btn-sm" onclick="navigateTo('landing')">→ الرئيسية</button>
-      <button class="btn btn-rust" onclick="manualSaveAll()" style="box-shadow: 0 2px 8px rgba(0,0,0,0.15);">💾 حفظ شامل للتغييرات الآن</button>
+      <button class="btn btn-rust" onclick="manualSaveAll()" style="box-shadow: 0 2px 8px rgba(0,0,0,0.15);">💾 حفظ سحابي وإرسال تنبيهات</button>
     </div>
     <div style="margin-bottom:12px;">
       <h2>لوحة التحكم الشاملة - الإدارة</h2>
-      <span style="font-size:13px; opacity:0.9;">اضغط على أي خلية لتعديل الدوام، ثم اضغط حفظ التغيرات.</span>
+      <span style="font-size:13px; opacity:0.9;">انقر فوق أي خلية لتغيير الدوام، وسيتلقى الموظف إشعاراً بالتعديل مباشرة.</span>
     </div>
     <div class="tab-bar" id="adminTabBar"></div>
     <div class="controls-bar">
@@ -402,7 +353,7 @@ main{padding:20px 0 60px; position:relative; z-index:1;}
     </div>
     <div id="adminTabContent"></div>
 
-    <div class="dept-note-card" style="margin-top:20px; padding:16px; background:rgba(0,0,0,0.2); border:1px solid rgba(255,255,255,0.2); border-radius:var(--radius-m);">
+    <div class="dept-note-card" style="margin-top:20px; padding:16px; background:#f8fafc; border:1px solid var(--line-strong); border-radius:var(--radius-m);">
       <h3 style="margin-bottom:10px;">📝 ملاحظة وتنبيهات الإدارة للقسم</h3>
       <div class="field">
         <textarea id="deptNoteText" rows="3" placeholder="اكتب ملاحظة القسم هنا..."></textarea>
@@ -442,6 +393,7 @@ main{padding:20px 0 60px; position:relative; z-index:1;}
 <!-- FIREBASE SDKs -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-messaging-compat.js"></script>
 
 <script>
 (function(){
@@ -452,8 +404,8 @@ var manifestData = {
   "short_name": "ينابيع 1994",
   "start_url": ".",
   "display": "standalone",
-  "background_color": "#332a26",
-  "theme_color": "#b83232"
+  "background_color": "#ffffff",
+  "theme_color": "#0f2b48"
 };
 var stringManifest = JSON.stringify(manifestData);
 var blob = new Blob([stringManifest], {type: 'application/json'});
@@ -494,11 +446,40 @@ firebase.initializeApp(firebaseConfig);
 var db = firebase.database();
 var dbRef = db.ref('restaurant_schedule');
 
+// إعداد خدمة الإشعارات
+var messaging = null;
+if (firebase.messaging.isSupported()) {
+  messaging = firebase.messaging();
+}
+
+window.requestNotificationPermission = function() {
+  if ('Notification' in window) {
+    Notification.requestPermission().then(function(permission) {
+      if (permission === 'granted') {
+        showToast('تم تفعيل إشعارات الهاتف بنجاح 🔔');
+      } else {
+        showToast('تعذر الحصول على صلاحية الإشعارات');
+      }
+    });
+  } else {
+    showToast('متصفحك لا يدعم الإشعارات المباشرة');
+  }
+};
+
+function triggerShiftNotification(empName, dateKey, newDetails) {
+  if ('Notification' in window && Notification.permission === 'granted') {
+    new Notification('تعديل جدول الدوام 📅', {
+      body: 'عزيزي ' + empName + '، تم تعديل دوامك ليوم (' + dateKey + ') إلى: ' + newDetails,
+      icon: 'https://via.placeholder.com/128/0f2b48/ffffff?text=1994'
+    });
+  }
+}
+
 var DEPARTMENTS = [
-  {id:'shawarma', name:'الشاورما', icon:'🌯', color:'#a82e2e', colorLight:'#c84545', colorDark:'#691c1c'},
-  {id:'snack', name:'السناك', icon:'🍟', color:'#b38b24', colorLight:'#cfa63a', colorDark:'#7a5c11'},
-  {id:'broasted', name:'البروستد', icon:'🍗', color:'#a6671e', colorLight:'#c7812c', colorDark:'#6e410d'},
-  {id:'callcenter', name:'سنتر الاتصال', icon:'📞', color:'#33302f', colorLight:'#4c4846', colorDark:'#1f1d1c'}
+  {id:'shawarma', name:'الشاورما', icon:'🌯', color:'#0f2b48'},
+  {id:'snack', name:'السناك', icon:'🍟', color:'#0f2b48'},
+  {id:'broasted', name:'البروستد', icon:'🍗', color:'#0f2b48'},
+  {id:'callcenter', name:'سنتر الاتصال', icon:'📞', color:'#0f2b48'}
 ];
 
 var BASE_SHIFTS = [
@@ -707,7 +688,7 @@ function renderLanding() {
   var grid = document.getElementById('deptGrid');
   grid.innerHTML = DEPARTMENTS.map(function(dept){
     var actionText = isAdmin ? 'تعديل جدول القسم ←' : 'استعراض جدول القسم ←';
-    return '<div class="dept-tile" onclick="openDepartment(\'' + dept.id + '\')" style="--dept-color:' + dept.color + ';--dept-light:' + dept.colorLight + ';--dept-dark:' + dept.colorDark + '">' +
+    return '<div class="dept-tile" onclick="openDepartment(\'' + dept.id + '\')">' +
       '<h3>قسم ' + dept.name + '</h3>' +
       '<button class="dept-tile-action">' + actionText + '</button>' +
     '</div>';
@@ -819,14 +800,14 @@ window.renderEmpSchedule = function() {
   if (noteData.text || (noteData.media && noteData.media.length > 0)) {
     var mediaHtml = (noteData.media || []).map(function(item) {
       return item.type === 'image'
-        ? '<img src="' + item.url + '" style="max-width:220px; max-height:160px; border-radius:8px; border:1px solid rgba(255,255,255,0.3); margin:5px;">'
-        : '<video src="' + item.url + '" controls style="max-width:250px; max-height:160px; border-radius:8px; border:1px solid rgba(255,255,255,0.3); margin:5px;"></video>';
+        ? '<img src="' + item.url + '" style="max-width:220px; max-height:160px; border-radius:8px; border:1px solid #cbd5e1; margin:5px;">'
+        : '<video src="' + item.url + '" controls style="max-width:250px; max-height:160px; border-radius:8px; border:1px solid #cbd5e1; margin:5px;"></video>';
     }).join('');
 
     displayBox.innerHTML = 
-      '<div style="background:rgba(0,0,0,0.22); border:1px solid rgba(255,255,255,0.2); border-radius:var(--radius-m); padding:16px;">' +
-        '<h4 style="color:#ffffff; margin-bottom:8px;">📌 ملاحظات وتوجيهات الإدارة للقسم:</h4>' +
-        '<p style="margin:0 0 10px 0; font-size:14px; white-space:pre-wrap; color:#f0e6df;">' + (noteData.text || 'لا توجد ملاحظات نصية.') + '</p>' +
+      '<div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:var(--radius-m); padding:16px;">' +
+        '<h4 style="color:var(--bank-blue); margin-bottom:8px;">📌 ملاحظات وتوجيهات الإدارة للقسم:</h4>' +
+        '<p style="margin:0 0 10px 0; font-size:14px; white-space:pre-wrap; color:var(--ink);">' + (noteData.text || 'لا توجد ملاحظات نصية.') + '</p>' +
         '<div style="display:flex; gap:10px; flex-wrap:wrap;">' + mediaHtml + '</div>' +
       '</div>';
   } else {
@@ -1028,7 +1009,7 @@ window.openAssignModal = function(deptId, empId, dateKey, isThu) {
 
     '<div class="modal-actions">' +
       '<button class="btn btn-ghost" onclick="closeAssignModal()">إلغاء</button>' +
-      '<button class="btn btn-rust" onclick="handleSaveCellChanges(\'' + deptId + '\', \'' + empId + '\', \'' + dateKey + '\')">تطبيق التعديل</button>' +
+      '<button class="btn btn-rust" onclick="handleSaveCellChanges(\'' + deptId + '\', \'' + empId + '\', \'' + dateKey + '\')">تطبيق والتنبيه</button>' +
     '</div>';
 
   document.getElementById('modal-assign').hidden = false;
@@ -1046,14 +1027,21 @@ window.handleSaveCellChanges = function(deptId, empId, dateKey) {
   var subValue = document.getElementById('subSelectInput').value;
   var noteValue = document.getElementById('noteInput').value.trim();
 
+  var emps = state.employees[deptId] || [];
+  var emp = emps.find(function(e) { return e.id === empId; });
+  var updatedDetails = "";
+
   if (!state.customShifts) state.customShifts = {};
   if (!state.customShifts[dateKey]) state.customShifts[dateKey] = {};
   
   if (shiftVal === 'CUSTOM') {
     var customText = document.getElementById('customTimeInput').value.trim();
     state.customShifts[dateKey][empId] = customText || '06:00 ص - 04:00 م';
+    updatedDetails = customText;
   } else {
-    state.customShifts[dateKey][empId] = parseInt(shiftVal);
+    var idx = parseInt(shiftVal);
+    state.customShifts[dateKey][empId] = idx;
+    updatedDetails = BASE_SHIFTS[idx].desc;
   }
 
   if (!state.notes) state.notes = {};
@@ -1072,14 +1060,23 @@ window.handleSaveCellChanges = function(deptId, empId, dateKey) {
     delete state.schedule[dateKey][deptId].offs[empId];
   } else if (subValue === "OFF_NO_SUB") {
     state.schedule[dateKey][deptId].offs[empId] = "NONE";
+    updatedDetails = "إجازة (بدون بديل)";
   } else {
     state.schedule[dateKey][deptId].offs[empId] = subValue;
+    var subEmp = emps.find(function(e){ return e.id === subValue; });
+    updatedDetails = "إجازة (البديل: " + (subEmp ? subEmp.name : '') + ")";
   }
 
   closeAssignModal();
   renderAdmin();
+
+  // إرسال تنبيه للموظف فور التعديل
+  if(emp) {
+    triggerShiftNotification(emp.name, dateKey, updatedDetails);
+  }
+
   saveStateToFirebase(function(){
-    showToast('تم الحفظ سحابياً بنجاح');
+    showToast('تم حفظ التعديل وإرسال الإشعار بنجاح 🔔');
   });
 };
 
