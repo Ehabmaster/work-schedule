@@ -527,6 +527,15 @@ function getFirstDayOfCurrentMonth() {
   return new Date(now.getFullYear(), now.getMonth(), 1);
 }
 
+function getWeekStartSaturday(d) {
+  // يعيد تاريخ يوم السبت لنفس الأسبوع (السبت فأحد...جمعة)
+  var day = d.getDay(); // 0=أحد ... 6=سبت
+  var diff = (day + 1) % 7; // عدد الأيام منذ آخر سبت
+  var result = new Date(d.getTime());
+  result.setDate(d.getDate() - diff);
+  return result;
+}
+
 function getDefaultEmployees() {
   var emps = {};
   DEPARTMENTS.forEach(function(d) {
@@ -783,6 +792,9 @@ window.renderEmpSchedule = function() {
   if (rangeType === "20") {
     startDateVal = formatDateKey(getFirstDayOfCurrentMonth());
     document.getElementById('empStartDate').value = startDateVal;
+  } else {
+    startDateVal = formatDateKey(getWeekStartSaturday(parseInputDate(startDateVal)));
+    document.getElementById('empStartDate').value = startDateVal;
   }
 
   var daysCount = parseInt(rangeType);
@@ -831,6 +843,11 @@ window.renderAdmin = function() {
   var rangeType = document.getElementById('adminRangeType').value;
   var daysCount = parseInt(rangeType);
   var startDateVal = document.getElementById('adminStartDate').value;
+
+  if (rangeType !== "20") {
+    startDateVal = formatDateKey(getWeekStartSaturday(parseInputDate(startDateVal)));
+    document.getElementById('adminStartDate').value = startDateVal;
+  }
 
   document.getElementById('adminTabContent').innerHTML = generateDepartmentTable(activeDeptId, startDateVal, daysCount, true, null);
 
