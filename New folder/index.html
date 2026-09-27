@@ -414,6 +414,11 @@ main{padding:20px 0 60px; position:relative; z-index:1;}
   <div class="modal" id="modal-assign-body"></div>
 </div>
 
+<!-- EMPLOYEE NAME EDIT / DELETE MODAL -->
+<div class="modal-overlay" id="modal-employee" hidden>
+  <div class="modal" id="modal-employee-body"></div>
+</div>
+
 <!-- FIREBASE SDKs -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
@@ -482,8 +487,18 @@ var BASE_SHIFTS = [
   {id:'s3', time:'02:00 م - 12:00 ص', desc:'شفت 3 (2م - 12ص)'},
   {id:'s4', time:'03:00 م - 01:00 ص', desc:'شفت 4 (3م - 1ص)'},
   {id:'s5', time:'05:00 م - 03:00 ص', desc:'شفت 5 (5م - 3ص)'},
-  {id:'s_thu', time:'04:00 م - 02:00 ص', desc:'شفت ذروة الخميس (4م - 2ص)'}
+  {id:'s_thu', time:'04:00 م - 02:00 ص', desc:'شفت ذروة الخميس (4م - 2ص)'},
+  {id:'s6', time:'09:00 ص - 07:00 م', desc:'شفت 6 (9ص - 7م)'},
+  {id:'s7', time:'01:00 م - 11:00 م', desc:'شفت 7 (1م - 11م)'}
 ];
+
+/* الشفتات المتاحة للاختيار اليدوي لكل قسم، حسب دوام كل قسم الفعلي (يبقى خيار "توقيت مخصص" متاحاً دائماً) */
+var DEPT_SHIFT_OPTIONS = {
+  shawarma: [0,1,2,3,4,5],
+  snack: [0,1,2,4,5],
+  broasted: [0,3,4,5,7],
+  callcenter: [3,4,5,6,7]
+};
 
 var EMPLOYEE_NAMES = {
   shawarma: ['إيهاب دعبول','مالك دويمة','شبانة','أسمر','محمد المصري','بيرملي','احمد الصعيدي','اشرف','ضياء'],
@@ -737,9 +752,10 @@ function generateDepartmentTable(deptId, startDateVal, daysCount, isEditable, fi
   }
 
   emps.forEach(function(emp){
-    html += '<tr><td style="font-weight:700; position:sticky; right:0; z-index:2; text-align:right;">' + 
-      emp.name + 
-      (isEditable ? ' <button class="btn-ghost btn-danger" onclick="handleRemoveEmployee(\''+deptId+'\', \''+emp.id+'\')" title="حذف">🗑️</button>' : '') +
+    html += '<tr><td style="font-weight:700; position:sticky; right:0; z-index:2; text-align:right;' + (isEditable ? ' cursor:pointer;' : '') + '"' +
+      (isEditable ? ' onclick="openEmployeeActions(\''+deptId+'\', \''+emp.id+'\')"' : '') + '>' +
+      emp.name +
+      (isEditable ? ' <span style="opacity:.5; font-size:11px;">✏️</span>' : '') +
       '</td>';
       
     dates.forEach(function(d){
@@ -964,11 +980,50 @@ window.handleRemoveEmployee = function(deptId, empId) {
   if (event) event.stopPropagation();
   if(confirm("هل أنت متأكد من إزالة هذا الموظف من القسم؟")) {
     state.employees[deptId] = state.employees[deptId].filter(function(e) { return e.id !== empId; });
+    closeEmployeeModal();
     saveStateToFirebase(function(){
       renderAdmin();
       showToast('تم إزالة الموظف بنجاح');
     });
   }
+};
+
+window.openEmployeeActions = function(deptId, empId) {
+  var emps = state.employees[deptId] || [];
+  var emp = emps.find(function(e){ return e.id === empId; });
+  if (!emp) return;
+
+  var body = document.getElementById('modal-employee-body');
+  body.innerHTML =
+    '<h3>👤 بيانات الموظف</h3>' +
+    '<div class="field">' +
+      '<label>اسم الموظف:</label>' +
+      '<input type="text" id="empNameInput" value="' + emp.name + '">' +
+    '</div>' +
+    '<div class="modal-actions">' +
+      '<button class="btn btn-ghost" onclick="closeEmployeeModal()">إلغاء</button>' +
+      '<button class="btn btn-rust" onclick="handleRenameEmployee(\'' + deptId + '\', \'' + empId + '\')">💾 حفظ الاسم</button>' +
+    '</div>' +
+    '<hr style="border:0; border-top:1px dashed var(--line); margin:16px 0;">' +
+    '<button class="btn" style="width:100%; border-color:var(--danger); color:var(--danger); padding:12px;" onclick="handleRemoveEmployee(\'' + deptId + '\', \'' + empId + '\')">🗑️ حذف الموظف نهائياً</button>';
+
+  document.getElementById('modal-employee').hidden = false;
+};
+
+window.closeEmployeeModal = function() { document.getElementById('modal-employee').hidden = true; };
+
+window.handleRenameEmployee = function(deptId, empId) {
+  var newName = document.getElementById('empNameInput').value.trim();
+  if (!newName) { showToast('الرجاء إدخال اسم صحيح'); return; }
+  var emps = state.employees[deptId] || [];
+  var emp = emps.find(function(e){ return e.id === empId; });
+  if (!emp) return;
+  emp.name = newName;
+  closeEmployeeModal();
+  saveStateToFirebase(function(){
+    renderAdmin();
+    showToast('تم تعديل الاسم بنجاح');
+  });
 };
 
 window.openAssignModal = function(deptId, empId, dateKey, isThu) {
@@ -986,7 +1041,8 @@ window.openAssignModal = function(deptId, empId, dateKey, isThu) {
     '<div class="field">' +
       '<label>اختيار شفت العمل:</label>' +
       '<select id="shiftSelectInput" onchange="toggleCustomTimeInput()">' +
-        BASE_SHIFTS.map(function(s, idx){
+        (DEPT_SHIFT_OPTIONS[deptId] || BASE_SHIFTS.map(function(s,i){ return i; })).map(function(idx){
+          var s = BASE_SHIFTS[idx];
           var isSelected = (!currentShift.isCustom && s.time === currentShift.text) ? 'selected' : '';
           return '<option value="' + idx + '" ' + isSelected + '>' + s.desc + '</option>';
         }).join('') +
